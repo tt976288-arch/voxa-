@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="bn">
-<head>
 
+<head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -10,99 +10,98 @@
 <style>
 
 *{
-  box-sizing:border-box;
+box-sizing:border-box;
 }
 
 body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#f5f3ff;
-  color:#222;
+margin:0;
+font-family:Arial,sans-serif;
+background:#f5f3ff;
+color:#222;
 }
 
 .header{
-  background:linear-gradient(135deg,#6857f5,#9a62ff);
-  color:white;
-  padding:25px 20px;
-  border-radius:0 0 25px 25px;
+background:linear-gradient(135deg,#6857f5,#9a62ff);
+color:white;
+padding:25px 20px;
+border-radius:0 0 25px 25px;
 }
 
 .header h1{
-  margin:0;
-  font-size:28px;
+margin:0;
+font-size:28px;
 }
 
 .header p{
-  margin:7px 0 0;
-  opacity:.9;
+margin:7px 0 0;
+opacity:.9;
 }
 
 .rooms{
-  padding:20px;
+padding:20px;
 }
 
 .room{
-  background:white;
-  margin-bottom:15px;
-  padding:18px;
-  border-radius:18px;
-  box-shadow:0 5px 18px #0001;
+background:white;
+margin-bottom:15px;
+padding:18px;
+border-radius:18px;
+box-shadow:0 5px 18px #0001;
 }
 
 .room-top{
-  display:flex;
-  align-items:center;
-  gap:14px;
+display:flex;
+align-items:center;
+gap:14px;
 }
 
 .icon{
-  width:55px;
-  height:55px;
-  border-radius:16px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:#eeeaff;
-  font-size:28px;
+width:55px;
+height:55px;
+border-radius:16px;
+display:flex;
+align-items:center;
+justify-content:center;
+background:#eeeaff;
+font-size:28px;
 }
 
 .room-info{
-  flex:1;
+flex:1;
 }
 
 .room-info h3{
-  margin:0 0 5px;
+margin:0 0 5px;
 }
 
 .room-info p{
-  margin:0;
-  color:#888;
-  font-size:13px;
+margin:0;
+color:#888;
+font-size:13px;
 }
 
 .join{
-  width:100%;
-  margin-top:15px;
-  padding:13px;
-  border:0;
-  border-radius:12px;
-  background:#6857f5;
-  color:white;
-  font-size:15px;
-  font-weight:bold;
+width:100%;
+margin-top:15px;
+padding:13px;
+border:0;
+border-radius:12px;
+background:#6857f5;
+color:white;
+font-size:15px;
+font-weight:bold;
 }
 
 .back{
-  display:block;
-  margin:20px;
-  text-align:center;
-  color:#6857f5;
-  font-weight:bold;
-  text-decoration:none;
+display:block;
+margin:20px;
+text-align:center;
+color:#6857f5;
+font-weight:bold;
+text-decoration:none;
 }
 
 </style>
-
 </head>
 
 <body>
@@ -135,12 +134,12 @@ body{
 
 </div>
 
-<button class="join" onclick="joinRoom('Music Lounge')">
+<button class="join"
+onclick="joinRoom('Music Lounge')">
 Join Room
 </button>
 
 </div>
-
 
 
 <div class="room">
@@ -159,12 +158,12 @@ Join Room
 
 </div>
 
-<button class="join" onclick="joinRoom('Bangla Chat')">
+<button class="join"
+onclick="joinRoom('Bangla Chat')">
 Join Room
 </button>
 
 </div>
-
 
 
 <div class="room">
@@ -183,12 +182,12 @@ Join Room
 
 </div>
 
-<button class="join" onclick="joinRoom('Gaming Zone')">
+<button class="join"
+onclick="joinRoom('Gaming Zone')">
 Join Room
 </button>
 
 </div>
-
 
 
 <div class="room">
@@ -207,7 +206,8 @@ Join Room
 
 </div>
 
-<button class="join" onclick="joinRoom('Night Talk')">
+<button class="join"
+onclick="joinRoom('Night Talk')">
 Join Room
 </button>
 
@@ -222,13 +222,14 @@ Join Room
 
 
 <script>
+
 function joinRoom(room){
 
-  window.location.href =
-    "room.html?room=" +
-    encodeURIComponent(room);
+window.location.href =
+"room.html?room=" +
+encodeURIComponent(room);
 
-  }
+}
 
 </script>
 
