@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="bn">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Voxa Room</title>
+
+<style>
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  min-height:100vh;
+  font-family:Arial,sans-serif;
+  background:#f5f3ff;
+}
+
+.header{
+  background:linear-gradient(135deg,#6857f5,#9a62ff);
+  color:white;
+  padding:25px 20px;
+  border-radius:0 0 25px 25px;
+}
+
+.header h1{
+  margin:0;
+  font-size:26px;
+}
+
+.header p{
+  margin:7px 0 0;
+  opacity:.9;
+}
+
+.room-box{
+  margin:20px;
+  background:white;
+  border-radius:22px;
+  padding:20px;
+  box-shadow:0 5px 20px #0001;
+}
+
+.room-title{
+  text-align:center;
+  font-size:22px;
+  font-weight:bold;
+}
+
+.status{
+  text-align:center;
+  color:#777;
+  margin-top:8px;
+}
+
+.users{
+  margin-top:25px;
+}
+
+.user{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px;
+  background:#f7f6ff;
+  border-radius:14px;
+  margin-bottom:10px;
+}
+
+.avatar{
+  width:45px;
+  height:45px;
+  border-radius:50%;
+  background:#6857f5;
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+}
+
+.controls{
+  display:flex;
+  gap:12px;
+  margin-top:25px;
+}
+
+button{
+  flex:1;
+  padding:14px;
+  border:0;
+  border-radius:14px;
+  font-size:15px;
+  font-weight:bold;
+}
+
+.mic{
+  background:#6857f5;
+  color:white;
+}
+
+.leave{
+  background:#ff4d67;
+  color:white;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<h1>🎙️ Voxa Room</h1>
+
+<p>Live Voice Room</p>
+
+</div>
+
+
+<div class="room-box">
+
+<div class="room-title" id="roomName">
+Voxa Room
+</div>
+
+<div class="status">
+🟢 Room চলছে
+</div>
+
+
+<div class="users">
+
+<div class="user">
+
+<div class="avatar">
+👤
+</div>
+
+<div>
+<strong>আপনি</strong>
+<br>
+<span>🎙️ Listener</span>
+</div>
+
+</div>
+
+
+<div class="user">
+
+<div class="avatar">
+🎤
+</div>
+
+<div>
+<strong>Voxa Host</strong>
+<br>
+<span>🎙️ Host</span>
+</div>
+
+</div>
+
+</div>
+
+
+<div class="controls">
+
+<button
+class="mic"
+onclick="toggleMic()"
+id="micButton"
+>
+🎤 Mic On
+</button>
+
+<button
+class="leave"
+onclick="leaveRoom()"
+>
+🚪 Leave
+</button>
+
+</div>
+
+</div>
+
+
+<script>
+
+const params =
+new URLSearchParams(
+window.location.search
+);
+
+const room =
+params.get("room");
+
+if(room){
+
+document.getElementById(
+"roomName"
+).textContent = room;
+
+}
+
+
+let micOn = true;
+
+
+function toggleMic(){
+
+micOn = !micOn;
+
+const button =
+document.getElementById(
+"micButton"
+);
+
+if(micOn){
+
+button.textContent =
+"🎤 Mic On";
+
+}else{
+
+button.textContent =
+"🔇 Mic Off";
+
+}
+
+}
+
+
+function leaveRoom(){
+
+window.location.href =
+"rooms.html";
+
+}
+
+</script>
+
+</body>
+
+</html>
