@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Voxa Rooms</title>
+
+<style>
+
+*{
+  box-sizing:border-box;
+}
+
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f5f3ff;
+  color:#222;
+}
+
+.header{
+  background:linear-gradient(135deg,#6857f5,#9a62ff);
+  color:white;
+  padding:25px 20px;
+  border-radius:0 0 25px 25px;
+}
+
+.header h1{
+  margin:0;
+  font-size:28px;
+}
+
+.header p{
+  margin:7px 0 0;
+  opacity:.9;
+}
+
+.rooms{
+  padding:20px;
+}
+
+.room{
+  background:white;
+  margin-bottom:15px;
+  padding:18px;
+  border-radius:18px;
+  box-shadow:0 5px 18px #0001;
+}
+
+.room-top{
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.icon{
+  width:55px;
+  height:55px;
+  border-radius:16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#eeeaff;
+  font-size:28px;
+}
+
+.room-info{
+  flex:1;
+}
+
+.room-info h3{
+  margin:0 0 5px;
+}
+
+.room-info p{
+  margin:0;
+  color:#888;
+  font-size:13px;
+}
+
+.join{
+  width:100%;
+  margin-top:15px;
+  padding:13px;
+  border:0;
+  border-radius:12px;
+  background:#6857f5;
+  color:white;
+  font-size:15px;
+  font-weight:bold;
+}
+
+.back{
+  display:block;
+  margin:20px;
+  text-align:center;
+  color:#6857f5;
+  font-weight:bold;
+  text-decoration:none;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<h1>🎙️ Voxa Rooms</h1>
+
+<p>আপনার পছন্দের Voice Room-এ যোগ দিন</p>
+
+</div>
+
+
+<div class="rooms">
+
+
+<div class="room">
+
+<div class="room-top">
+
+<div class="icon">🎵</div>
+
+<div class="room-info">
+
+<h3>Music Lounge</h3>
+
+<p>🎤 গান, আড্ডা ও মজা</p>
+
+</div>
+
+</div>
+
+<button class="join" onclick="joinRoom('Music Lounge')">
+Join Room
+</button>
+
+</div>
+
+
+
+<div class="room">
+
+<div class="room-top">
+
+<div class="icon">🇧🇩</div>
+
+<div class="room-info">
+
+<h3>Bangla Chat</h3>
+
+<p>💬 বাংলায় কথা বলুন</p>
+
+</div>
+
+</div>
+
+<button class="join" onclick="joinRoom('Bangla Chat')">
+Join Room
+</button>
+
+</div>
+
+
+
+<div class="room">
+
+<div class="room-top">
+
+<div class="icon">🎮</div>
+
+<div class="room-info">
+
+<h3>Gaming Zone</h3>
+
+<p>🎮 Gamerদের আড্ডা</p>
+
+</div>
+
+</div>
+
+<button class="join" onclick="joinRoom('Gaming Zone')">
+Join Room
+</button>
+
+</div>
+
+
+
+<div class="room">
+
+<div class="room-top">
+
+<div class="icon">🌙</div>
+
+<div class="room-info">
+
+<h3>Night Talk</h3>
+
+<p>🌙 রাতের আড্ডা</p>
+
+</div>
+
+</div>
+
+<button class="join" onclick="joinRoom('Night Talk')">
+Join Room
+</button>
+
+</div>
+
+</div>
+
+
+<a class="back" href="index.html">
+← Voxa Home
+</a>
+
+
+<script>
+
+function joinRoom(room){
+
+  alert(
+    room +
+    " Room শীঘ্রই Live হবে 🎙️"
+  );
+
+}
+
+</script>
+
+</body>
+</html>
