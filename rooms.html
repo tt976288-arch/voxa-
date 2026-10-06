@@ -222,15 +222,13 @@ Join Room
 
 
 <script>
-
 function joinRoom(room){
 
-  alert(
-    room +
-    " Room শীঘ্রই Live হবে 🎙️"
-  );
+  window.location.href =
+    "room.html?room=" +
+    encodeURIComponent(room);
 
-}
+  }
 
 </script>
 
