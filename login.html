@@ -1,1 +1,217 @@
 
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Voxa Login</title>
+
+<style>
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:Arial,sans-serif;
+  background:linear-gradient(135deg,#6857f5,#9a62ff);
+  padding:20px;
+}
+
+.box{
+  width:100%;
+  max-width:400px;
+  background:white;
+  padding:28px 22px;
+  border-radius:24px;
+  box-shadow:0 10px 35px #0003;
+}
+
+.logo{
+  text-align:center;
+  font-size:32px;
+  font-weight:900;
+  letter-spacing:3px;
+  color:#6857f5;
+}
+
+.subtitle{
+  text-align:center;
+  color:#777;
+  margin:8px 0 25px;
+}
+
+input{
+  width:100%;
+  padding:14px;
+  margin:7px 0;
+  border:1px solid #ddd;
+  border-radius:12px;
+  font-size:15px;
+  outline:none;
+}
+
+input:focus{
+  border-color:#6857f5;
+}
+
+button{
+  width:100%;
+  padding:14px;
+  margin-top:12px;
+  border:0;
+  border-radius:12px;
+  background:#6857f5;
+  color:white;
+  font-size:16px;
+  font-weight:bold;
+}
+
+.switch{
+  text-align:center;
+  margin-top:18px;
+  color:#777;
+  font-size:14px;
+}
+
+.switch span{
+  color:#6857f5;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.msg{
+  text-align:center;
+  margin-top:12px;
+  color:#d52240;
+  font-size:13px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+
+<div class="logo">VOXA</div>
+
+<div class="subtitle" id="title">
+Login to Voxa
+</div>
+
+<input
+id="name"
+type="text"
+placeholder="আপনার নাম"
+style="display:none"
+>
+
+<input
+id="email"
+type="email"
+placeholder="Email"
+>
+
+<input
+id="password"
+type="password"
+placeholder="Password"
+>
+
+<button id="mainBtn">
+Login
+</button>
+
+<div class="switch">
+<span id="switchText">
+নতুন অ্যাকাউন্ট তৈরি করুন
+</span>
+</div>
+
+<div class="msg" id="msg"></div>
+
+</div>
+
+<script type="module">
+
+import {
+initializeApp
+}
+from
+"https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+
+import {
+getAuth,
+signInWithEmailAndPassword,
+createUserWithEmailAndPassword,
+updateProfile
+}
+from
+"https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+
+import {
+getFirestore,
+doc,
+setDoc
+}
+from
+"https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+
+
+const firebaseConfig={
+
+apiKey:
+"AIzaSyA5gUOduogMjx8b4-knQMnFQRWPUn-xecQ",
+
+authDomain:
+"voxa-fc846.firebaseapp.com",
+
+projectId:
+"voxa-fc846",
+
+storageBucket:
+"voxa-fc846.firebasestorage.app",
+
+messagingSenderId:
+"337160477784",
+
+appId:
+"1:337160477784:web:4098a526345da4d02d3e2d",
+
+measurementId:
+"G-F9MTE9F5V7"
+
+};
+
+
+const app=initializeApp(firebaseConfig);
+
+const auth=getAuth(app);
+
+const db=getFirestore(app);
+
+
+let register=false;
+
+
+const nameInput=
+document.getElementById("name");
+
+const emailInput=
+document.getElementById("email");
+
+const passwordInput=
+document.getElementById("password");
+
+const mainBtn=
+document.getElementById("mainBtn");
+
+const switchText=
+document.getElementById("switchText");
+
+const title=
+document.getElementById("title");
+
+const msg=
