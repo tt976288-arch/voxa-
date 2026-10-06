@@ -1,205 +1,729 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Voxa — Login & Register</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Voxa</title>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;background:linear-gradient(135deg,#171126,#38216b);color:#fff;font-family:Arial,sans-serif;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:18px}
-.box{width:100%;max-width:390px;background:#241a3d;padding:25px;border-radius:22px;box-shadow:0 20px 50px #0007}
-.logo{text-align:center;font-size:40px;font-weight:800}
-.sub{text-align:center;color:#bbb;margin:5px 0 22px}
-.tabs{display:flex;gap:5px;margin-bottom:15px}
-.tabs button{flex:1;padding:12px;border:0;border-radius:9px;background:#382b51;color:#bbb}
-.tabs .on{background:#7c4dff;color:#fff}
-input{width:100%;padding:13px;margin:6px 0;box-sizing:border-box;border-radius:9px;border:1px solid #594873;background:#171126;color:#fff}
-.go{width:100%;padding:14px;margin-top:10px;border:0;border-radius:9px;background:#7c4dff;color:white;font-weight:bold}
-.msg{text-align:center;color:#ffd166;margin-top:12px;min-height:20px}
-.profile{background:#171126;padding:16px;border-radius:12px;margin-top:15px}
-.coins{font-size:27px;color:#ffd166;font-weight:bold}
+
+body{
+ margin:0;
+ font-family:Arial,sans-serif;
+ background:#f5f6fb;
+ color:#171827
+}
+
+header{
+ background:linear-gradient(135deg,#6857f5,#9a62ff);
+ color:white;
+ padding:18px 16px 28px;
+ border-radius:0 0 28px 28px
+}
+
+.top{
+ display:flex;
+ justify-content:space-between;
+ align-items:center
+}
+
+.logo{
+ font-size:28px;
+ font-weight:900;
+ letter-spacing:2px
+}
+
+.welcome{
+ margin-top:24px
+}
+
+.welcome h2{
+ margin:0 0 6px
+}
+
+.welcome p{
+ margin:0;
+ opacity:.85
+}
+
+.card{
+ background:white;
+ margin:14px 16px;
+ padding:18px;
+ border-radius:20px;
+ box-shadow:0 5px 18px #0001
+}
+
+.coins{
+ display:flex;
+ justify-content:space-between;
+ align-items:center
+}
+
+.coin{
+ font-size:26px;
+ font-weight:800;
+ margin-top:5px
+}
+
+button{
+ border:0;
+ cursor:pointer
+}
+
+.add,.join{
+ background:#6857f5;
+ color:white;
+ border-radius:11px;
+ padding:10px 15px;
+ font-weight:bold
+}
+
+.title{
+ font-size:19px;
+ font-weight:800;
+ margin:20px 16px 10px
+}
+
+.rooms{
+ display:grid;
+ grid-template-columns:1fr 1fr;
+ gap:12px;
+ margin:0 16px 90px
+}
+
+.room{
+ background:white;
+ padding:15px;
+ border-radius:18px;
+ box-shadow:0 4px 15px #0000000b
+}
+
+.room .emoji{
+ font-size:30px
+}
+
+.room h3{
+ font-size:16px;
+ margin:8px 0 4px
+}
+
+.room p{
+ font-size:13px;
+ color:#777;
+ margin:0 0 12px
+}
+
+.join{
+ width:100%;
+ background:#eeeaff;
+ color:#5b4ce6
+}
+
+#profile{
+ display:none
+}
+
+.avatar{
+ width:80px;
+ height:80px;
+ border-radius:50%;
+ margin:auto;
+ background:linear-gradient(135deg,#6857f5,#a964ff);
+ color:white;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-size:32px;
+ font-weight:bold
+}
+
+.center{
+ text-align:center
+}
+
+.name{
+ font-size:21px;
+ font-weight:bold;
+ margin-top:10px
+}
+
+.email{
+ color:#777;
+ font-size:13px;
+ margin-top:4px
+}
+
+.stats{
+ display:flex;
+ justify-content:space-around;
+ margin-top:20px
+}
+
+.stats b{
+ display:block;
+ font-size:20px
+}
+
+.stats span{
+ font-size:12px;
+ color:#777
+}
+
+.action{
+ display:block;
+ width:100%;
+ text-align:left;
+ padding:14px;
+ margin-top:10px;
+ border-radius:12px;
+ background:#f1f2f7;
+ font-weight:bold
+}
+
+.logout{
+ background:#ffe8eb;
+ color:#d52240
+}
+
+nav{
+ position:fixed;
+ bottom:0;
+ left:0;
+ right:0;
+ background:white;
+ border-top:1px solid #ddd;
+ display:flex;
+ justify-content:space-around;
+ padding:9px 4px 12px;
+ z-index:5
+}
+
+nav button{
+ background:none;
+ color:#777;
+ font-size:12px
+}
+
+nav button.active{
+ color:#6353eb;
+ font-weight:bold
+}
+
+nav span{
+ display:block;
+ font-size:21px;
+ margin-bottom:2px
+}
+
+.toast{
+ display:none;
+ position:fixed;
+ bottom:78px;
+ left:50%;
+ transform:translateX(-50%);
+ background:#171827;
+ color:white;
+ padding:10px 16px;
+ border-radius:12px;
+ z-index:9;
+ font-size:13px;
+ white-space:nowrap
+}
 </style>
 </head>
+
 <body>
 
-<div class="box">
+<section id="home">
+
+<header>
+
+<div class="top">
 <div class="logo">VOXA</div>
-<div class="sub">Voice • Friends • Community</div>
 
-<div id="auth">
-<div class="tabs">
-<button id="lt" class="on">Login</button>
-<button id="rt">Register</button>
+<button
+style="background:#ffffff25;color:white;padding:10px;border-radius:12px"
+onclick="toast('Notifications আসছে 🔔')">
+🔔
+</button>
+
 </div>
 
-<input id="name" placeholder="আপনার নাম" style="display:none">
-<input id="email" type="email" placeholder="Email">
-<input id="pass" type="password" placeholder="Password">
-<button id="go" class="go">Login</button>
-<div id="msg" class="msg"></div>
+<div class="welcome">
+
+<h2 id="welcome">স্বাগতম 👋</h2>
+
+<p>
+Voice • Friends • Community
+</p>
+
 </div>
 
-<div id="home" style="display:none">
-<h2>স্বাগতম, <span id="who"></span> 👋</h2>
-<div class="profile">
+</header>
+
+
+<div class="card coins">
+
+<div>
+
+<small style="color:#777">
 Voxa Coins
-<div class="coins">🪙 <span id="coins">0</span></div>
-<small id="mail"></small>
-</div>
-<button id="out" class="go">Logout</button>
+</small>
+
+<div class="coin">
+🪙 <span id="coins">0</span>
 </div>
 
 </div>
+
+<button
+class="add"
+onclick="toast('Coins system শীঘ্রই আসছে 🪙')">
++ Add
+</button>
+
+</div>
+
+
+<div class="title">
+🎙️ Live Voice Rooms
+</div>
+
+
+<div class="rooms">
+
+
+<div class="room">
+
+<div class="emoji">
+🎵
+</div>
+
+<h3>
+Music Lounge
+</h3>
+
+<p>
+👥 12 people
+</p>
+
+<button
+class="join"
+onclick="toast('Voice Room শীঘ্রই আসছে 🎙️')">
+Join
+</button>
+
+</div>
+
+
+<div class="room">
+
+<div class="emoji">
+💬
+</div>
+
+<h3>
+Bangla Chat
+</h3>
+
+<p>
+👥 8 people
+</p>
+
+<button
+class="join"
+onclick="toast('Voice Room শীঘ্রই আসছে 🎙️')">
+Join
+</button>
+
+</div>
+
+
+<div class="room">
+
+<div class="emoji">
+🎮
+</div>
+
+<h3>
+Gaming Zone
+</h3>
+
+<p>
+👥 21 people
+</p>
+
+<button
+class="join"
+onclick="toast('Voice Room শীঘ্রই আসছে 🎙️')">
+Join
+</button>
+
+</div>
+
+
+<div class="room">
+
+<div class="emoji">
+🌙
+</div>
+
+<h3>
+Night Talk
+</h3>
+
+<p>
+👥 5 people
+</p>
+
+<button
+class="join"
+onclick="toast('Voice Room শীঘ্রই আসছে 🎙️')">
+Join
+</button>
+
+</div>
+
+
+</div>
+
+</section>
+
+
+<section id="profile">
+
+<header>
+
+<div class="top">
+
+<div class="logo">
+PROFILE
+</div>
+
+</div>
+
+</header>
+
+
+<div class="card center">
+
+<div
+class="avatar"
+id="avatar">
+V
+</div>
+
+<div
+class="name"
+id="pname">
+Voxa User
+</div>
+
+<div
+class="email"
+id="email">
+</div>
+
+
+<div class="stats">
+
+<div>
+<b id="pcoins">
+0
+</b>
+<span>
+Coins
+</span>
+</div>
+
+<div>
+<b>
+0
+</b>
+<span>
+Friends
+</span>
+</div>
+
+<div>
+<b>
+0
+</b>
+<span>
+Rooms
+</span>
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<button
+class="action"
+onclick="toast('Edit Profile শীঘ্রই আসছে ✏️')">
+✏️ Edit Profile
+</button>
+
+<button
+class="action"
+onclick="toast('Settings শীঘ্রই আসছে ⚙️')">
+⚙️ Settings
+</button>
+
+<button
+class="action logout"
+id="logout">
+🚪 Logout
+</button>
+
+</div>
+
+</section>
+
+
+<nav>
+
+<button
+id="homeBtn"
+class="active"
+onclick="home()">
+
+<span>🏠</span>
+Home
+
+</button>
+
+
+<button
+onclick="toast('Voice Rooms শীঘ্রই আসছে 🎙️')">
+
+<span>🎙️</span>
+Rooms
+
+</button>
+
+
+<button
+onclick="toast('Chat শীঘ্রই আসছে 💬')">
+
+<span>💬</span>
+Chat
+
+</button>
+
+
+<button
+id="profileBtn"
+onclick="profile()">
+
+<span>👤</span>
+Profile
+
+</button>
+
+</nav>
+
+
+<div
+id="toastBox"
+class="toast">
+</div>
+
 
 <script type="module">
 
-import{initializeApp}from"https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+import {
+initializeApp
+}
+from
+"https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
 
-import{getAuth,createUserWithEmailAndPassword,signInWithEmailAndPassword,signOut,updateProfile,onAuthStateChanged}from"https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
 
-import{getFirestore,doc,setDoc,getDoc}from"https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+import {
+getAuth,
+onAuthStateChanged,
+signOut
+}
+from
+"https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+
+
+import {
+getFirestore,
+doc,
+getDoc
+}
+from
+"https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 
 const firebaseConfig={
-apiKey:"AIzaSyA5gUOduogMjx8b4-knQMnFQRWPUn-xecQ",
-authDomain:"voxa-fc846.firebaseapp.com",
-projectId:"voxa-fc846",
-storageBucket:"voxa-fc846.firebasestorage.app",
-messagingSenderId:"337160477784",
-appId:"1:337160477784:web:4098a526345da4d02d3e2d",
-measurementId:"G-F9MTE9F5V7"
-};
 
+apiKey:
+"AIzaSyA5gUOduogMjx8b4-knQMnFQRWPUn-xecQ",
 
-const app=initializeApp(firebaseConfig),
-auth=getAuth(app),
-db=getFirestore(app);
+authDomain:
+"voxa-fc846.firebaseapp.com",
 
-let reg=false;
+projectId:
+"voxa-fc846",
 
-const $=id=>document.getElementById(id);
+storageBucket:
+"voxa-fc846.firebasestorage.app",
 
-const msg=t=>{
-$("msg").textContent=t
-};
+messagingSenderId:
+"337160477784",
 
+appId:
+"1:337160477784:web:4098a526345da4d02d3e2d",
 
-function mode(x){
-
-reg=x;
-
-$("name").style.display=x?"block":"none";
-
-$("go").textContent=x?"Create Account":"Login";
-
-$("lt").className=x?"":"on";
-
-$("rt").className=x?"on":"";
-
-msg("");
-
-}
-
-
-$("lt").onclick=()=>mode(false);
-
-$("rt").onclick=()=>mode(true);
-
-
-$("go").onclick=async()=>{
-
-try{
-
-let e=$("email").value.trim(),
-p=$("pass").value;
-
-if(!e||!p)
-return msg("Email ও Password দিন।");
-
-$("go").disabled=true;
-
-
-if(reg){
-
-let n=$("name").value.trim()||"Voxa User";
-
-let c=await createUserWithEmailAndPassword(auth,e,p);
-
-await updateProfile(c.user,{displayName:n});
-
-await setDoc(doc(db,"users",c.user.uid),{
-name:n,
-email:e,
-coins:0,
-createdAt:new Date().toISOString()
-});
-
-msg("Account তৈরি হয়েছে ✅");
-
-}else{
-
-await signInWithEmailAndPassword(auth,e,p);
-
-msg("Login সফল ✅");
-
-}
-
-}catch(e){
-
-let m={
-
-"auth/email-already-in-use":
-"এই Email দিয়ে Account আগে থেকেই আছে।",
-
-"auth/invalid-email":
-"Email ঠিক নয়।",
-
-"auth/weak-password":
-"Password কমপক্ষে 6 অক্ষরের দিন।",
-
-"auth/invalid-credential":
-"Email অথবা Password ভুল।"
-
-};
-
-msg(m[e.code]||("সমস্যা হয়েছে: "+e.code));
-
-}finally{
-
-$("go").disabled=false;
-
-}
+measurementId:
+"G-F9MTE9F5V7"
 
 };
 
 
-onAuthStateChanged(auth,async u=>{
+const app=initializeApp(firebaseConfig);
 
-if(!u){
+const auth=getAuth(app);
 
-$("auth").style.display="block";
-$("home").style.display="none";
+const db=getFirestore(app);
+
+
+window.toast=m=>{
+
+let x=document.getElementById("toastBox");
+
+x.textContent=m;
+
+x.style.display="block";
+
+setTimeout(
+()=>x.style.display="none",
+2200
+);
+
+};
+
+
+window.home=()=>{
+
+document.getElementById("home").style.display="block";
+
+document.getElementById("profile").style.display="none";
+
+document
+.getElementById("homeBtn")
+.classList.add("active");
+
+document
+.getElementById("profileBtn")
+.classList.remove("active");
+
+};
+
+
+window.profile=()=>{
+
+document.getElementById("home").style.display="none";
+
+document.getElementById("profile").style.display="block";
+
+document
+.getElementById("homeBtn")
+.classList.remove("active");
+
+document
+.getElementById("profileBtn")
+.classList.add("active");
+
+};
+
+
+onAuthStateChanged(
+auth,
+async user=>{
+
+if(!user){
+
+location.href="login.html";
 
 return;
 
 }
 
-$("auth").style.display="none";
-$("home").style.display="block";
 
-$("who").textContent=u.displayName||"Voxa User";
+let name=
+user.displayName ||
+"Voxa User";
 
-$("mail").textContent=u.email||"";
 
-let s=await getDoc(doc(db,"users",u.uid));
+document.getElementById("welcome")
+.textContent=
+"স্বাগতম, "+name+" 👋";
 
-if(s.exists())
-$("coins").textContent=s.data().coins??0;
+
+document.getElementById("pname")
+.textContent=name;
+
+
+document.getElementById("email")
+.textContent=
+user.email || "";
+
+
+document.getElementById("avatar")
+.textContent=
+name.charAt(0).toUpperCase();
+
+
+try{
+
+let s=
+await getDoc(
+doc(db,"users",user.uid)
+);
+
+
+let c=
+s.exists()
+?
+(s.data().coins ?? 0)
+:
+0;
+
+
+document.getElementById("coins")
+.textContent=c;
+
+
+document.getElementById("pcoins")
+.textContent=c;
+
+
+}catch(e){
+
+console.log(e);
+
+}
 
 });
 
 
-$("out").onclick=()=>signOut(auth);
+document.getElementById("logout")
+.onclick=
+async()=>{
+
+await signOut(auth);
+
+location.reload();
+
+};
 
 </script>
 
