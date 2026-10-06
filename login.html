@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="bn">
 <head>
@@ -7,7 +6,9 @@
 <title>Voxa Login</title>
 
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+}
 
 body{
   margin:0;
@@ -50,11 +51,6 @@ input{
   border:1px solid #ddd;
   border-radius:12px;
   font-size:15px;
-  outline:none;
-}
-
-input:focus{
-  border-color:#6857f5;
 }
 
 button{
@@ -79,7 +75,6 @@ button{
 .switch span{
   color:#6857f5;
   font-weight:bold;
-  cursor:pointer;
 }
 
 .msg{
@@ -132,86 +127,159 @@ Login
 
 <div class="msg" id="msg"></div>
 
-</div>
-
-<script type="module">
+</div><script type="module">
 
 import {
-initializeApp
-}
-from
-"https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+  initializeApp
+} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
 
 import {
-getAuth,
-signInWithEmailAndPassword,
-createUserWithEmailAndPassword,
-updateProfile
-}
-from
-"https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+  getAuth,
+  signInWithEmailAndPassword,
+  createUserWithEmailAndPassword,
+  updateProfile
+} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
 
 import {
-getFirestore,
-doc,
-setDoc
-}
-from
-"https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+  getFirestore,
+  doc,
+  setDoc
+} from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
+const firebaseConfig = {
+  apiKey: "AIzaSyA5gUOduogMjx8b4-knQMnFQRWPUn-xecQ",
+  authDomain: "voxa-fc846.firebaseapp.com",
+  projectId: "voxa-fc846",
+  storageBucket: "voxa-fc846.firebasestorage.app",
+  messagingSenderId: "337160477784",
+  appId: "1:337160477784:web:4098a526345da4d02d3e2d",
+  measurementId: "G-F9MTE9F5V7"
+};
 
-const firebaseConfig={
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-apiKey:
-"AIzaSyA5gUOduogMjx8b4-knQMnFQRWPUn-xecQ",
+let register = false;
 
-authDomain:
-"voxa-fc846.firebaseapp.com",
+const nameInput = document.getElementById("name");
+const emailInput = document.getElementById("email");
+const passwordInput = document.getElementById("password");
+const mainBtn = document.getElementById("mainBtn");
+const switchText = document.getElementById("switchText");
+const title = document.getElementById("title");
+const msg = document.getElementById("msg");
 
-projectId:
-"voxa-fc846",
+switchText.onclick = () => {
 
-storageBucket:
-"voxa-fc846.firebasestorage.app",
+  register = !register;
+  msg.textContent = "";
 
-messagingSenderId:
-"337160477784",
+  if(register){
 
-appId:
-"1:337160477784:web:4098a526345da4d02d3e2d",
+    title.textContent = "Create your Voxa account";
+    mainBtn.textContent = "Register";
 
-measurementId:
-"G-F9MTE9F5V7"
+    switchText.textContent =
+      "আগে থেকেই অ্যাকাউন্ট আছে? Login করুন";
+
+    nameInput.style.display = "block";
+
+  }else{
+
+    title.textContent = "Login to Voxa";
+    mainBtn.textContent = "Login";
+
+    switchText.textContent =
+      "নতুন অ্যাকাউন্ট তৈরি করুন";
+
+    nameInput.style.display = "none";
+  }
 
 };
 
+mainBtn.onclick = async () => {
 
-const app=initializeApp(firebaseConfig);
+  msg.textContent = "";
 
-const auth=getAuth(app);
+  const email = emailInput.value.trim();
+  const password = passwordInput.value;
 
-const db=getFirestore(app);
+  try{
 
+    if(register){
 
-let register=false;
+      const name = nameInput.value.trim();
 
+      if(!name){
+        msg.textContent = "আপনার নাম লিখুন";
+        return;
+      }
 
-const nameInput=
-document.getElementById("name");
+      if(password.length < 6){
+        msg.textContent =
+          "Password কমপক্ষে ৬ অক্ষরের হতে হবে";
+        return;
+      }
 
-const emailInput=
-document.getElementById("email");
+      const result =
+        await createUserWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
 
-const passwordInput=
-document.getElementById("password");
+      await updateProfile(
+        result.user,
+        {name:name}
+      );
 
-const mainBtn=
-document.getElementById("mainBtn");
+      await setDoc(
+        doc(db,"users",result.user.uid),
+        {
+          name:name,
+          email:email,
+          coins:0
+        }
+      );
 
-const switchText=
-document.getElementById("switchText");
+      location.href = "index.html";
 
-const title=
-document.getElementById("title");
+    }else{
 
-const msg=
+      await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      location.href = "index.html";
+    }
+
+  }catch(error){
+
+    if(error.code === "auth/invalid-credential"){
+      msg.textContent =
+        "Email অথবা Password ভুল";
+    }
+    else if(error.code === "auth/email-already-in-use"){
+      msg.textContent =
+        "এই Email দিয়ে আগে থেকেই অ্যাকাউন্ট আছে";
+    }
+    else if(error.code === "auth/weak-password"){
+      msg.textContent =
+        "Password আরও শক্ত করুন";
+    }
+    else{
+      msg.textContent =
+        "সমস্যা হয়েছে: " + error.message;
+    }
+
+  }
+
+};
+
+</script>
+
+</body>
+</html>
