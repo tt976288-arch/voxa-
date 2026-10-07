@@ -1,538 +1,664 @@
 <!DOCTYPE html>
 <html lang="bn">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Voxa</title>
 
 <style>
-*{box-sizing:border-box}
+
+*{
+box-sizing:border-box;
+}
 
 body{
- margin:0;
- font-family:Arial,sans-serif;
- background:#f5f6fb;
- color:#171827
+margin:0;
+font-family:Arial,sans-serif;
+background:#f4f7f7;
+color:#333;
+padding-bottom:75px;
 }
 
-header{
- background:linear-gradient(135deg,#6857f5,#9a62ff);
- color:white;
- padding:18px 16px 28px;
- border-radius:0 0 28px 28px
-}
+/* TOP */
 
 .top{
- display:flex;
- justify-content:space-between;
- align-items:center
+height:90px;
+padding:22px 18px 10px;
+background:linear-gradient(135deg,#18cbb0,#55dec8);
+color:white;
+border-radius:0 0 25px 25px;
+display:flex;
+align-items:center;
+justify-content:space-between;
 }
 
 .logo{
- font-size:28px;
- font-weight:900;
- letter-spacing:2px
+font-size:28px;
+font-weight:bold;
 }
 
-.welcome{
- margin-top:24px
+.top-icons{
+display:flex;
+gap:18px;
+font-size:25px;
 }
 
-.welcome h2{
- margin:0 0 6px
+.icon-btn{
+cursor:pointer;
 }
 
-.welcome p{
- margin:0;
- opacity:.85
+/* TABS */
+
+.tabs{
+display:flex;
+justify-content:center;
+gap:35px;
+font-size:21px;
+font-weight:bold;
+margin-top:-3px;
 }
 
-.card{
- background:white;
- margin:14px 16px;
- padding:18px;
- border-radius:20px;
- box-shadow:0 5px 18px #0001
+.tab{
+padding:12px 5px;
+color:#d9fff8;
 }
 
-.coins{
- display:flex;
- justify-content:space-between;
- align-items:center
+.tab.active{
+color:white;
+border-bottom:4px solid white;
 }
 
-.coin{
- font-size:26px;
- font-weight:800;
- margin-top:5px
+/* SEARCH */
+
+.search{
+font-size:25px;
 }
 
-button{
- border:0;
- cursor:pointer
+/* BANNER */
+
+.banner{
+margin:15px 18px;
+height:145px;
+border-radius:20px;
+overflow:hidden;
+background:
+linear-gradient(135deg,#ffbd45,#ff7d30);
+position:relative;
+display:flex;
+align-items:center;
+padding:20px;
+color:white;
+box-shadow:0 5px 15px #0002;
 }
 
-.add,.join{
- background:#6857f5;
- color:white;
- border-radius:11px;
- padding:10px 15px;
- font-weight:bold
+.banner h1{
+font-size:27px;
+margin:0;
+text-shadow:2px 2px #0005;
 }
 
-.title{
- font-size:19px;
- font-weight:800;
- margin:20px 16px 10px
+.banner p{
+font-size:17px;
+margin-top:10px;
 }
+
+.gift{
+position:absolute;
+right:20px;
+font-size:75px;
+}
+
+/* CATEGORY */
+
+.categories{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:10px;
+padding:5px 18px;
+}
+
+.category{
+height:120px;
+border-radius:20px;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+font-weight:bold;
+font-size:16px;
+box-shadow:0 3px 10px #0001;
+}
+
+.category span{
+font-size:40px;
+margin-bottom:5px;
+}
+
+.rank{
+background:linear-gradient(135deg,#43e1cb,#b1fff4);
+}
+
+.family{
+background:linear-gradient(135deg,#ffd866,#fff0a9);
+}
+
+.friend{
+background:linear-gradient(135deg,#ef75dc,#ffb5ef);
+}
+
+/* FILTER */
+
+.filters{
+display:flex;
+gap:12px;
+padding:20px 18px 12px;
+overflow-x:auto;
+}
+
+.filter{
+padding:12px 22px;
+border-radius:30px;
+background:#e7e7e7;
+font-weight:bold;
+font-size:17px;
+white-space:nowrap;
+}
+
+.filter.active{
+background:#ffd93d;
+}
+
+/* ROOMS */
 
 .rooms{
- display:grid;
- grid-template-columns:1fr 1fr;
- gap:12px;
- margin:0 16px 90px
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+padding:5px 18px;
 }
 
-.room{
- background:white;
- padding:15px;
- border-radius:18px;
- box-shadow:0 4px 15px #0000000b
+.room-card{
+background:white;
+border-radius:16px;
+overflow:hidden;
+box-shadow:0 3px 12px #0002;
+cursor:pointer;
 }
 
-.room .emoji{
- font-size:30px
+.room-image{
+height:175px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:70px;
+position:relative;
 }
 
-.room h3{
- font-size:16px;
- margin:8px 0 4px
+.room1{
+background:linear-gradient(135deg,#252525,#777);
 }
 
-.room p{
- font-size:13px;
- color:#777;
- margin:0 0 12px
+.room2{
+background:linear-gradient(135deg,#e9e0c8,#fff8e8);
 }
 
-.join{
- width:100%;
- background:#eeeaff;
- color:#5b4ce6
+.room3{
+background:linear-gradient(135deg,#e8795e,#ffc0a7);
 }
 
-#profile{
- display:none
+.room4{
+background:linear-gradient(135deg,#15101e,#6e4e91);
 }
 
-.avatar{
- width:80px;
- height:80px;
- border-radius:50%;
- margin:auto;
- background:linear-gradient(135deg,#6857f5,#a964ff);
- color:white;
- display:flex;
- align-items:center;
- justify-content:center;
- font-size:32px;
- font-weight:bold
+.level{
+position:absolute;
+right:7px;
+top:7px;
+background:#ffd83d;
+padding:6px 9px;
+border-radius:10px;
+font-weight:bold;
 }
 
-.center{
- text-align:center
+.chest{
+position:absolute;
+left:7px;
+bottom:8px;
+font-size:32px;
 }
 
-.name{
- font-size:21px;
- font-weight:bold;
- margin-top:10px
+.room-info{
+padding:10px;
 }
 
-.email{
- color:#777;
- font-size:13px;
- margin-top:4px
+.room-title{
+font-size:16px;
+font-weight:bold;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis;
 }
 
-.stats{
- display:flex;
- justify-content:space-around;
- margin-top:20px
+.room-users{
+color:#888;
+font-size:13px;
+margin-top:6px;
 }
 
-.stats b{
- display:block;
- font-size:20px
+/* BOTTOM */
+
+.bottom{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+height:72px;
+background:white;
+border-top:1px solid #ddd;
+display:grid;
+grid-template-columns:repeat(3,1fr);
+z-index:10;
 }
 
-.stats span{
- font-size:12px;
- color:#777
+.bottom-item{
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+font-size:27px;
+color:#b8c0c0;
 }
 
-.action{
- display:block;
- width:100%;
- text-align:left;
- padding:14px;
- margin-top:10px;
- border-radius:12px;
- background:#f1f2f7;
- font-weight:bold
+.bottom-item span{
+font-size:13px;
+margin-top:3px;
+font-weight:bold;
 }
 
-.logout{
- background:#ffe8eb;
- color:#d52240
+.bottom-item.active{
+color:#24cdb2;
 }
 
-nav{
- position:fixed;
- bottom:0;
- left:0;
- right:0;
- background:white;
- border-top:1px solid #ddd;
- display:flex;
- justify-content:space-around;
- padding:9px 4px 12px;
- z-index:5
+/* COINS */
+
+.coins{
+position:fixed;
+top:8px;
+left:18px;
+background:#ffffff33;
+padding:5px 12px;
+border-radius:20px;
+font-size:13px;
+display:none;
 }
 
-nav button{
- background:none;
- color:#777;
- font-size:12px
+/* MOBILE */
+
+@media(max-width:380px){
+
+.banner h1{
+font-size:23px;
 }
 
-nav button.active{
- color:#6353eb;
- font-weight:bold
+.banner{
+height:130px;
 }
 
-nav span{
- display:block;
- font-size:21px;
- margin-bottom:2px
+.room-image{
+height:150px;
 }
 
-.toast{
- display:none;
- position:fixed;
- bottom:78px;
- left:50%;
- transform:translateX(-50%);
- background:#171827;
- color:white;
- padding:10px 16px;
- border-radius:12px;
- z-index:9;
- font-size:13px;
- white-space:nowrap
+.categories{
+gap:7px;
 }
+
+.category{
+height:110px;
+font-size:14px;
+}
+
+}
+
 </style>
+
 </head>
+
 
 <body>
 
-<section id="home">
 
-<header>
+<!-- TOP -->
 
 <div class="top">
-<div class="logo">VOXA</div>
 
-<button
-style="background:#ffffff25;color:white;padding:10px;border-radius:12px"
-onclick="toast('Notifications আসছে 🔔')">
-🔔
-</button>
+<div>
+
+<div class="logo">
+Voxa
+</div>
+
+<div class="tabs">
+
+<div class="tab">
+Mine
+</div>
+
+<div class="tab active">
+Popular
+</div>
 
 </div>
 
-<div class="welcome">
+</div>
 
-<h2 id="welcome">স্বাগতম 👋</h2>
+
+<div class="top-icons">
+
+<div class="icon-btn">
+🔍
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- BANNER -->
+
+<div class="banner">
+
+<div>
+
+<h1>
+🎁 Recall Friends
+</h1>
 
 <p>
-Voice • Friends • Community
+Invite friends & get coins
 </p>
 
 </div>
 
-</header>
-
-
-<div class="card coins">
-
-<div>
-
-<small style="color:#777">
-Voxa Coins
-</small>
-
-<div class="coin">
-🪙 <span id="coins">0</span>
+<div class="gift">
+🎁
 </div>
 
 </div>
 
-<button
-class="add"
-onclick="toast('Coins system শীঘ্রই আসছে 🪙')">
-+ Add
-</button>
+
+
+<!-- CATEGORIES -->
+
+<div class="categories">
+
+
+<div
+class="category rank"
+onclick="showMessage('Ranking coming soon 🏆')"
+>
+
+<span>
+🏆
+</span>
+
+Ranking
 
 </div>
 
 
-<div class="title">
-🎙️ Live Voice Rooms
+<div
+class="category family"
+onclick="showMessage('Family coming soon 👨‍👩‍👧')"
+>
+
+<span>
+👨‍👩‍👧
+</span>
+
+Family
+
 </div>
 
+
+<div
+class="category friend"
+onclick="showMessage('CP / Friend coming soon ❤️')"
+>
+
+<span>
+💞
+</span>
+
+CP / Friend
+
+</div>
+
+
+</div>
+
+
+
+<!-- FILTER -->
+
+<div class="filters">
+
+<div class="filter active">
+🔥 Popular
+</div>
+
+<div class="filter">
+🎮 Game
+</div>
+
+<div class="filter">
+🎵 Video/Music
+</div>
+
+</div>
+
+
+
+<!-- ROOMS -->
 
 <div class="rooms">
 
 
-<div class="room">
+<div
+class="room-card"
+onclick="openRoom('Music Lounge')"
+>
 
-<div class="emoji">
-🎵
+<div class="room-image room1">
+
+👩‍🎤
+
+<div class="level">
+60
 </div>
 
-<h3>
-Music Lounge
-</h3>
-
-<p>
-👥 12 people
-</p>
-
-<button
-class="join"
-onclick="toast('Voice Room শীঘ্রই আসছে 🎙️')">
-Join
-</button>
-
-</div>
-
-
-<div class="room">
-
-<div class="emoji">
-💬
-</div>
-
-<h3>
-Bangla Chat
-</h3>
-
-<p>
-👥 8 people
-</p>
-
-<button
-class="join"
-onclick="toast('Voice Room শীঘ্রই আসছে 🎙️')">
-Join
-</button>
-
-</div>
-
-
-<div class="room">
-
-<div class="emoji">
-🎮
-</div>
-
-<h3>
-Gaming Zone
-</h3>
-
-<p>
-👥 21 people
-</p>
-
-<button
-class="join"
-onclick="toast('Voice Room শীঘ্রই আসছে 🎙️')">
-Join
-</button>
-
-</div>
-
-
-<div class="room">
-
-<div class="emoji">
-🌙
-</div>
-
-<h3>
-Night Talk
-</h3>
-
-<p>
-👥 5 people
-</p>
-
-<button
-class="join"
-onclick="toast('Voice Room শীঘ্রই আসছে 🎙️')">
-Join
-</button>
-
-</div>
-
-
-</div>
-
-</section>
-
-
-<section id="profile">
-
-<header>
-
-<div class="top">
-
-<div class="logo">
-PROFILE
+<div class="chest">
+🎁
 </div>
 
 </div>
 
-</header>
+<div class="room-info">
+
+<div class="room-title">
+🇧🇩 RONG TULI
+</div>
+
+<div class="room-users">
+🎙️ 96 people
+</div>
+
+</div>
+
+</div>
 
 
-<div class="card center">
 
 <div
-class="avatar"
-id="avatar">
-V
+class="room-card"
+onclick="openRoom('Night Talk')"
+>
+
+<div class="room-image room2">
+
+👑
+
+<div class="level">
+47
 </div>
+
+<div class="chest">
+🎁
+</div>
+
+</div>
+
+<div class="room-info">
+
+<div class="room-title">
+🇧🇩 Adhora's Host Room
+</div>
+
+<div class="room-users">
+🎙️ 11 people
+</div>
+
+</div>
+
+</div>
+
+
 
 <div
-class="name"
-id="pname">
-Voxa User
+class="room-card"
+onclick="openRoom('Bangla Chat')"
+>
+
+<div class="room-image room3">
+
+👩
+
+<div class="level">
+60
 </div>
+
+<div class="chest">
+🎁
+</div>
+
+</div>
+
+<div class="room-info">
+
+<div class="room-title">
+🇧🇩 মনি ফ্যামিলি তে সবাই
+</div>
+
+<div class="room-users">
+🎙️ 10 people
+</div>
+
+</div>
+
+</div>
+
+
 
 <div
-class="email"
-id="email">
+class="room-card"
+onclick="openRoom('Gaming Zone')"
+>
+
+<div class="room-image room4">
+
+👑
+
+<div class="level">
+60
+</div>
+
+<div class="chest">
+🎁
+</div>
+
+</div>
+
+<div class="room-info">
+
+<div class="room-title">
+🇧🇩 ❤️ Masti Zone 🥰
+</div>
+
+<div class="room-users">
+🎙️ 25 people
+</div>
+
+</div>
+
 </div>
 
 
-<div class="stats">
+</div>
 
-<div>
-<b id="pcoins">
-0
-</b>
+
+
+<!-- BOTTOM -->
+
+<div class="bottom">
+
+
+<div
+class="bottom-item active"
+onclick="location.href='index.html'"
+>
+
+🏠
+
 <span>
-Coins
-</span>
-</div>
-
-<div>
-<b>
-0
-</b>
-<span>
-Friends
-</span>
-</div>
-
-<div>
-<b>
-0
-</b>
-<span>
-Rooms
-</span>
-</div>
-
-</div>
-
-</div>
-
-
-<div class="card">
-
-<button
-class="action"
-onclick="toast('Edit Profile শীঘ্রই আসছে ✏️')">
-✏️ Edit Profile
-</button>
-
-<button
-class="action"
-onclick="toast('Settings শীঘ্রই আসছে ⚙️')">
-⚙️ Settings
-</button>
-
-<button
-class="action logout"
-id="logout">
-🚪 Logout
-</button>
-
-</div>
-
-</section>
-
-
-<nav>
-
-<button
-id="homeBtn"
-class="active"
-onclick="home()">
-
-<span>🏠</span>
 Home
+</span>
 
-</button>
-
-
-<button
-onclick="toast('Voice Rooms শীঘ্রই আসছে 🎙️')">
-
-<span>🎙️</span>
-Rooms
-
-</button>
-
-
-<button
-onclick="toast('Chat শীঘ্রই আসছে 💬')">
-
-<span>💬</span>
-Chat
-
-</button>
-
-
-<button
-id="profileBtn"
-onclick="profile()">
-
-<span>👤</span>
-Profile
-
-</button>
-
-</nav>
+</div>
 
 
 <div
-id="toastBox"
-class="toast">
+class="bottom-item"
+onclick="location.href='rooms.html'"
+>
+
+💬
+
+<span>
+Message
+</span>
+
 </div>
+
+
+<div
+class="bottom-item"
+onclick="showMessage('Profile coming soon 👤')"
+>
+
+👤
+
+<span>
+Me
+</span>
+
+</div>
+
+
+</div>
+
 
 
 <script type="module">
@@ -553,22 +679,16 @@ from
 "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
 
 
-import {
-getFirestore,
-doc,
-getDoc
-}
-from
-"https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
-
-
-const firebaseConfig={
+const firebaseConfig = {
 
 apiKey:
-"AIzaSyA5gUOduogMjx8b4-knQMnFQRWPUn-xecQ",
+"AIzaSyA5gUduogmjx8b4-knQMnFQRWPUn-xecQ",
 
 authDomain:
 "voxa-fc846.firebaseapp.com",
+
+databaseURL:
+"https://voxa-fc846-default-rtdb.firebaseio.com",
 
 projectId:
 "voxa-fc846",
@@ -580,7 +700,7 @@ messagingSenderId:
 "337160477784",
 
 appId:
-"1:337160477784:web:4098a526345da4d02d3e2d",
+"1:337160477784:web:4098a526345da4d02d3e2d2",
 
 measurementId:
 "G-F9MTE9F5V7"
@@ -588,144 +708,52 @@ measurementId:
 };
 
 
-const app=initializeApp(firebaseConfig);
+const app =
+initializeApp(firebaseConfig);
 
-const auth=getAuth(app);
+const auth =
+getAuth(app);
 
-const db=getFirestore(app);
-
-
-window.toast=m=>{
-
-let x=document.getElementById("toastBox");
-
-x.textContent=m;
-
-x.style.display="block";
-
-setTimeout(
-()=>x.style.display="none",
-2200
-);
-
-};
-
-
-window.home=()=>{
-
-document.getElementById("home").style.display="block";
-
-document.getElementById("profile").style.display="none";
-
-document
-.getElementById("homeBtn")
-.classList.add("active");
-
-document
-.getElementById("profileBtn")
-.classList.remove("active");
-
-};
-
-
-window.profile=()=>{
-
-document.getElementById("home").style.display="none";
-
-document.getElementById("profile").style.display="block";
-
-document
-.getElementById("homeBtn")
-.classList.remove("active");
-
-document
-.getElementById("profileBtn")
-.classList.add("active");
-
-};
 
 
 onAuthStateChanged(
 auth,
-async user=>{
+user => {
 
 if(!user){
 
-location.href="login.html";
-
-return;
-
-}
-
-
-let name=
-user.displayName ||
-"Voxa User";
-
-
-document.getElementById("welcome")
-.textContent=
-"স্বাগতম, "+name+" 👋";
-
-
-document.getElementById("pname")
-.textContent=name;
-
-
-document.getElementById("email")
-.textContent=
-user.email || "";
-
-
-document.getElementById("avatar")
-.textContent=
-name.charAt(0).toUpperCase();
-
-
-try{
-
-let s=
-await getDoc(
-doc(db,"users",user.uid)
-);
-
-
-let c=
-s.exists()
-?
-(s.data().coins ?? 0)
-:
-0;
-
-
-document.getElementById("coins")
-.textContent=c;
-
-
-document.getElementById("pcoins")
-.textContent=c;
-
-
-}catch(e){
-
-console.log(e);
+location.href =
+"login.html";
 
 }
 
 });
 
 
-document.getElementById("logout")
-.onclick=
-async()=>{
 
-await signOut(auth);
+window.openRoom =
+function(room){
 
-location.reload();
+location.href =
+"room.html?room=" +
+encodeURIComponent(room);
 
 };
 
+
+
+window.showMessage =
+function(text){
+
+alert(text);
+
+};
+
+
+
 </script>
 
+
 </body>
+
 </html>
