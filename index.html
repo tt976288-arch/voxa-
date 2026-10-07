@@ -610,17 +610,20 @@ error
 
 /* User Login আছে কিনা দেখবে */
 
-onAuthStateChanged(
-auth,
-user => {
+onAuthStateChanged(auth, user => {
 
-if(!user){
+  if (user) {
+    console.log("Voxa Login OK:", user.email);
+    return;
+  }
 
-window.location.replace(
-"login.html"
-);
+  setTimeout(() => {
 
-}
+    if (!auth.currentUser) {
+      window.location.replace("login.html");
+    }
+
+  }, 1500);
 
 });
 
