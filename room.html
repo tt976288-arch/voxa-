@@ -11,102 +11,94 @@
 <style>
 
 *{
-  box-sizing:border-box;
+box-sizing:border-box;
 }
 
 body{
-  margin:0;
-  min-height:100vh;
-  font-family:Arial,sans-serif;
-  background:#f5f3ff;
+margin:0;
+font-family:Arial,sans-serif;
+background:#f5f3ff;
+color:#222;
 }
 
 .header{
-  background:linear-gradient(135deg,#6857f5,#9a62ff);
-  color:white;
-  padding:25px 20px;
-  border-radius:0 0 25px 25px;
+background:linear-gradient(135deg,#6857f5,#9a62ff);
+color:white;
+padding:25px 20px;
+border-radius:0 0 25px 25px;
 }
 
 .header h1{
-  margin:0;
-  font-size:26px;
+margin:0;
+font-size:26px;
 }
 
 .header p{
-  margin:7px 0 0;
-  opacity:.9;
+margin:7px 0 0;
+opacity:.9;
 }
 
-.room-box{
-  margin:20px;
-  background:white;
-  border-radius:22px;
-  padding:20px;
-  box-shadow:0 5px 20px #0001;
+.room{
+margin:20px;
+background:white;
+padding:20px;
+border-radius:22px;
+box-shadow:0 5px 20px #0001;
 }
 
-.room-title{
-  text-align:center;
-  font-size:22px;
-  font-weight:bold;
+.room-name{
+text-align:center;
+font-size:23px;
+font-weight:bold;
 }
 
 .status{
-  text-align:center;
-  color:#777;
-  margin-top:8px;
+text-align:center;
+margin-top:8px;
+color:#777;
 }
 
 .users{
-  margin-top:25px;
+margin-top:25px;
 }
 
 .user{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  padding:12px;
-  background:#f7f6ff;
-  border-radius:14px;
-  margin-bottom:10px;
-}
-
-.avatar{
-  width:45px;
-  height:45px;
-  border-radius:50%;
-  background:#6857f5;
-  color:white;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:20px;
+padding:14px;
+background:#f7f6ff;
+border-radius:14px;
+margin-bottom:10px;
 }
 
 .controls{
-  display:flex;
-  gap:12px;
-  margin-top:25px;
+display:flex;
+gap:10px;
+margin-top:25px;
 }
 
 button{
-  flex:1;
-  padding:14px;
-  border:0;
-  border-radius:14px;
-  font-size:15px;
-  font-weight:bold;
+flex:1;
+padding:14px;
+border:0;
+border-radius:14px;
+font-size:15px;
+font-weight:bold;
 }
 
 .mic{
-  background:#6857f5;
-  color:white;
+background:#6857f5;
+color:white;
 }
 
 .leave{
-  background:#ff4d67;
-  color:white;
+background:#ff4d67;
+color:white;
+}
+
+#message{
+text-align:center;
+margin-top:15px;
+color:#6857f5;
+font-size:14px;
 }
 
 </style>
@@ -114,6 +106,7 @@ button{
 </head>
 
 <body>
+
 
 <div class="header">
 
@@ -124,46 +117,25 @@ button{
 </div>
 
 
-<div class="room-box">
+<div class="room">
 
-<div class="room-title" id="roomName">
+<div class="room-name" id="roomName">
 Voxa Room
 </div>
 
-<div class="status">
-🟢 Room চলছে
+<div class="status" id="status">
+Connecting...
 </div>
 
 
 <div class="users">
 
 <div class="user">
-
-<div class="avatar">
-👤
+👤 <strong id="myName">You</strong>
 </div>
 
-<div>
-<strong>আপনি</strong>
-<br>
-<span>🎙️ Listener</span>
-</div>
-
-</div>
-
-
-<div class="user">
-
-<div class="avatar">
-🎤
-</div>
-
-<div>
-<strong>Voxa Host</strong>
-<br>
-<span>🎙️ Host</span>
-</div>
-
+<div class="user" id="otherUser">
+👤 Waiting for another person...
 </div>
 
 </div>
@@ -173,8 +145,8 @@ Voxa Room
 
 <button
 class="mic"
-onclick="toggleMic()"
 id="micButton"
+onclick="toggleMic()"
 >
 🎤 Mic On
 </button>
@@ -188,61 +160,312 @@ onclick="leaveRoom()"
 
 </div>
 
+
+<div id="message"></div>
+
 </div>
 
 
-<script>
+<audio id="remoteAudio" autoplay></audio>
+
+
+<script type="module">
+
+import {
+initializeApp
+}
+from
+"https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+
+
+import {
+getAuth
+}
+from
+"https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+
+
+import {
+getDatabase,
+ref,
+set,
+get,
+push,
+onValue,
+onDisconnect
+}
+from
+"https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
+
+
+const firebaseConfig = {
+
+apiKey:
+"AIzaSyA5gUOduogMjx8b4-knQMnFQRWPUn-xecQ",
+
+authDomain:
+"voxa-fc846.firebaseapp.com",
+
+databaseURL:
+"https://voxa-fc846-default-rtdb.firebaseio.com",
+
+projectId:
+"voxa-fc846",
+
+storageBucket:
+"voxa-fc846.firebasestorage.app",
+
+messagingSenderId:
+"337160477784",
+
+appId:
+"1:337160477784:web:4098a526345da4d02d3e2d",
+
+measurementId:
+"G-F9MTE9F5V7"
+
+};
+
+
+const app =
+initializeApp(firebaseConfig);
+
+const auth =
+getAuth(app);
+
+const db =
+getDatabase(app);
+
 
 const params =
 new URLSearchParams(
 window.location.search
 );
 
-const room =
-params.get("room");
+const roomName =
+params.get("room") ||
+"Voxa Room";
 
-if(room){
 
 document.getElementById(
 "roomName"
-).textContent = room;
-
-}
-
-
-let micOn = true;
+).textContent =
+roomName;
 
 
-function toggleMic(){
+let localStream = null;
+let micOn = false;
 
-micOn = !micOn;
 
-const button =
+async function startMic(){
+
+try{
+
+localStream =
+await navigator.mediaDevices.getUserMedia({
+audio:true
+});
+
+micOn = true;
+
 document.getElementById(
 "micButton"
-);
-
-if(micOn){
-
-button.textContent =
+).textContent =
 "🎤 Mic On";
 
-}else{
+document.getElementById(
+"status"
+).textContent =
+"🟢 Microphone connected";
 
-button.textContent =
-"🔇 Mic Off";
+document.getElementById(
+"message"
+).textContent =
+"আপনার Microphone চালু হয়েছে";
+
+}catch(error){
+
+console.error(error);
+
+document.getElementById(
+"message"
+).textContent =
+"Microphone permission দিন";
 
 }
 
 }
 
 
-function leaveRoom(){
+window.toggleMic = async function(){
+
+if(!localStream){
+
+await startMic();
+
+return;
+
+}
+
+
+const audioTracks =
+localStream.getAudioTracks();
+
+
+audioTracks.forEach(track => {
+
+track.enabled =
+!track.enabled;
+
+micOn =
+track.enabled;
+
+});
+
+
+document.getElementById(
+"micButton"
+).textContent =
+micOn
+? "🎤 Mic On"
+: "🔇 Mic Off";
+
+};
+
+
+window.leaveRoom = function(){
+
+if(localStream){
+
+localStream.getTracks().forEach(
+track => track.stop()
+);
+
+}
 
 window.location.href =
 "rooms.html";
 
+};
+
+
+async function startRoom(){
+
+if(!auth.currentUser){
+
+document.getElementById(
+"message"
+).textContent =
+"আগে Login করুন";
+
+return;
+
 }
+
+
+document.getElementById(
+"myName"
+).textContent =
+auth.currentUser.displayName ||
+auth.currentUser.email;
+
+
+const roomId =
+encodeURIComponent(roomName);
+
+const userId =
+auth.currentUser.uid;
+
+const userRef =
+ref(
+db,
+"rooms/" +
+roomId +
+"/users/" +
+userId
+);
+
+
+await set(
+userRef,
+{
+name:
+auth.currentUser.displayName ||
+auth.currentUser.email,
+
+joinedAt:
+Date.now()
+}
+);
+
+
+onDisconnect(userRef).remove();
+
+
+document.getElementById(
+"status"
+).textContent =
+"🟢 Room connected";
+
+
+const usersRef =
+ref(
+db,
+"rooms/" +
+roomId +
+"/users"
+);
+
+
+onValue(
+usersRef,
+snapshot => {
+
+const users =
+snapshot.val();
+
+if(!users){
+
+return;
+
+}
+
+
+const count =
+Object.keys(users).length;
+
+
+if(count > 1){
+
+document.getElementById(
+"otherUser"
+).textContent =
+"👥 " +
+(count - 1) +
+" জন অন্য user";
+
+}else{
+
+document.getElementById(
+"otherUser"
+).textContent =
+"👤 Waiting for another person...";
+
+}
+
+});
+
+}
+
+
+document.addEventListener(
+"DOMContentLoaded",
+async () => {
+
+await startRoom();
+
+}
+);
 
 </script>
 
