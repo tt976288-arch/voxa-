@@ -19,14 +19,12 @@ margin:0;
 font-family:Arial,sans-serif;
 background:#f4f7f7;
 color:#333;
-padding-bottom:75px;
+padding-bottom:80px;
 }
 
-/* TOP */
-
 .top{
-height:90px;
-padding:22px 18px 10px;
+height:105px;
+padding:15px 18px;
 background:linear-gradient(135deg,#18cbb0,#55dec8);
 color:white;
 border-radius:0 0 25px 25px;
@@ -40,78 +38,55 @@ font-size:28px;
 font-weight:bold;
 }
 
-.top-icons{
-display:flex;
-gap:18px;
-font-size:25px;
-}
-
-.icon-btn{
-cursor:pointer;
-}
-
-/* TABS */
-
 .tabs{
 display:flex;
-justify-content:center;
-gap:35px;
-font-size:21px;
-font-weight:bold;
-margin-top:-3px;
+gap:30px;
+margin-top:8px;
 }
 
 .tab{
-padding:12px 5px;
+font-size:18px;
+font-weight:bold;
 color:#d9fff8;
 }
 
 .tab.active{
 color:white;
-border-bottom:4px solid white;
+border-bottom:3px solid white;
+padding-bottom:5px;
 }
-
-/* SEARCH */
 
 .search{
 font-size:25px;
 }
 
-/* BANNER */
-
 .banner{
 margin:15px 18px;
 height:145px;
 border-radius:20px;
-overflow:hidden;
-background:
-linear-gradient(135deg,#ffbd45,#ff7d30);
+background:linear-gradient(135deg,#ffbd45,#ff7d30);
 position:relative;
 display:flex;
 align-items:center;
 padding:20px;
 color:white;
-box-shadow:0 5px 15px #0002;
+overflow:hidden;
 }
 
 .banner h1{
-font-size:27px;
 margin:0;
-text-shadow:2px 2px #0005;
+font-size:26px;
 }
 
 .banner p{
-font-size:17px;
-margin-top:10px;
+font-size:16px;
 }
 
 .gift{
 position:absolute;
 right:20px;
-font-size:75px;
+font-size:70px;
 }
-
-/* CATEGORY */
 
 .categories{
 display:grid;
@@ -121,35 +96,32 @@ padding:5px 18px;
 }
 
 .category{
-height:120px;
+height:115px;
 border-radius:20px;
 display:flex;
 flex-direction:column;
 align-items:center;
 justify-content:center;
 font-weight:bold;
-font-size:16px;
 box-shadow:0 3px 10px #0001;
 }
 
 .category span{
-font-size:40px;
-margin-bottom:5px;
+font-size:38px;
+margin-bottom:6px;
 }
 
 .rank{
-background:linear-gradient(135deg,#43e1cb,#b1fff4);
+background:#69e5d1;
 }
 
 .family{
-background:linear-gradient(135deg,#ffd866,#fff0a9);
+background:#ffe38a;
 }
 
 .friend{
-background:linear-gradient(135deg,#ef75dc,#ffb5ef);
+background:#f18ce3;
 }
-
-/* FILTER */
 
 .filters{
 display:flex;
@@ -159,19 +131,16 @@ overflow-x:auto;
 }
 
 .filter{
-padding:12px 22px;
+padding:11px 20px;
 border-radius:30px;
 background:#e7e7e7;
 font-weight:bold;
-font-size:17px;
 white-space:nowrap;
 }
 
 .filter.active{
 background:#ffd93d;
 }
-
-/* ROOMS */
 
 .rooms{
 display:grid;
@@ -185,7 +154,6 @@ background:white;
 border-radius:16px;
 overflow:hidden;
 box-shadow:0 3px 12px #0002;
-cursor:pointer;
 }
 
 .room-image{
@@ -235,7 +203,6 @@ padding:10px;
 }
 
 .room-title{
-font-size:16px;
 font-weight:bold;
 white-space:nowrap;
 overflow:hidden;
@@ -247,8 +214,6 @@ color:#888;
 font-size:13px;
 margin-top:6px;
 }
-
-/* BOTTOM */
 
 .bottom{
 position:fixed;
@@ -282,46 +247,6 @@ font-weight:bold;
 color:#24cdb2;
 }
 
-/* COINS */
-
-.coins{
-position:fixed;
-top:8px;
-left:18px;
-background:#ffffff33;
-padding:5px 12px;
-border-radius:20px;
-font-size:13px;
-display:none;
-}
-
-/* MOBILE */
-
-@media(max-width:380px){
-
-.banner h1{
-font-size:23px;
-}
-
-.banner{
-height:130px;
-}
-
-.room-image{
-height:150px;
-}
-
-.categories{
-gap:7px;
-}
-
-.category{
-height:110px;
-font-size:14px;
-}
-
-}
-
 </style>
 
 </head>
@@ -329,8 +254,6 @@ font-size:14px;
 
 <body>
 
-
-<!-- TOP -->
 
 <div class="top">
 
@@ -354,20 +277,13 @@ Popular
 
 </div>
 
-
-<div class="top-icons">
-
-<div class="icon-btn">
+<div class="search">
 🔍
 </div>
 
 </div>
 
-</div>
 
-
-
-<!-- BANNER -->
 
 <div class="banner">
 
@@ -391,58 +307,26 @@ Invite friends & get coins
 
 
 
-<!-- CATEGORIES -->
-
 <div class="categories">
 
-
-<div
-class="category rank"
-onclick="showMessage('Ranking coming soon 🏆')"
->
-
-<span>
-🏆
-</span>
-
+<div class="category">
+<span>🏆</span>
 Ranking
-
 </div>
 
-
-<div
-class="category family"
-onclick="showMessage('Family coming soon 👨‍👩‍👧')"
->
-
-<span>
-👨‍👩‍👧
-</span>
-
+<div class="category">
+<span>👨‍👩‍👧</span>
 Family
-
 </div>
 
-
-<div
-class="category friend"
-onclick="showMessage('CP / Friend coming soon ❤️')"
->
-
-<span>
-💞
-</span>
-
+<div class="category">
+<span>💞</span>
 CP / Friend
+</div>
 
 </div>
 
 
-</div>
-
-
-
-<!-- FILTER -->
 
 <div class="filters">
 
@@ -461,8 +345,6 @@ CP / Friend
 </div>
 
 
-
-<!-- ROOMS -->
 
 <div class="rooms">
 
@@ -559,7 +441,7 @@ onclick="openRoom('Bangla Chat')"
 <div class="room-info">
 
 <div class="room-title">
-🇧🇩 মনি ফ্যামিলি তে সবাই
+🇧🇩 মনি ফ্যামিলি
 </div>
 
 <div class="room-users">
@@ -610,10 +492,7 @@ onclick="openRoom('Gaming Zone')"
 
 
 
-<!-- BOTTOM -->
-
 <div class="bottom">
-
 
 <div
 class="bottom-item active"
@@ -645,7 +524,6 @@ Message
 
 <div
 class="bottom-item"
-onclick="showMessage('Profile coming soon 👤')"
 >
 
 👤
@@ -655,7 +533,6 @@ Me
 </span>
 
 </div>
-
 
 </div>
 
@@ -672,8 +549,9 @@ from
 
 import {
 getAuth,
-onAuthStateChanged,
-signOut
+setPersistence,
+browserLocalPersistence,
+onAuthStateChanged
 }
 from
 "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
@@ -715,6 +593,22 @@ const auth =
 getAuth(app);
 
 
+/* Login session স্থায়ী রাখবে */
+
+setPersistence(
+auth,
+browserLocalPersistence
+).catch(error => {
+
+console.error(
+"Persistence error:",
+error
+);
+
+});
+
+
+/* User Login আছে কিনা দেখবে */
 
 onAuthStateChanged(
 auth,
@@ -722,34 +616,23 @@ user => {
 
 if(!user){
 
-location.href =
-"login.html";
+window.location.replace(
+"login.html"
+);
 
 }
 
 });
 
 
-
 window.openRoom =
 function(room){
 
-location.href =
+window.location.href =
 "room.html?room=" +
 encodeURIComponent(room);
 
 };
-
-
-
-window.showMessage =
-function(text){
-
-alert(text);
-
-};
-
-
 
 </script>
 
