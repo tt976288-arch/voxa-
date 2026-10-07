@@ -6,7 +6,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Voxa Room</title>
+<title>Voxa Live Room</title>
 
 <style>
 
@@ -58,15 +58,11 @@ margin-top:8px;
 color:#777;
 }
 
-.users{
-margin-top:25px;
-}
-
 .user{
 padding:14px;
 background:#f7f6ff;
 border-radius:14px;
-margin-bottom:10px;
+margin-top:12px;
 }
 
 .controls{
@@ -107,12 +103,11 @@ font-size:14px;
 
 <body>
 
-
 <div class="header">
 
-<h1>🎙️ Voxa Room</h1>
+<h1>🎙️ Voxa Live Room</h1>
 
-<p>Live Voice Room</p>
+<p>Live Voice Chat</p>
 
 </div>
 
@@ -124,19 +119,28 @@ Voxa Room
 </div>
 
 <div class="status" id="status">
-Connecting...
+Room connecting...
 </div>
 
-
-<div class="users">
 
 <div class="user">
-👤 <strong id="myName">You</strong>
+
+👤 <strong id="myName">
+You
+</strong>
+
+<br>
+
+<span id="myStatus">
+🎤 Mic Off
+</span>
+
 </div>
 
+
 <div class="user" id="otherUser">
+
 👤 Waiting for another person...
-</div>
 
 </div>
 
@@ -146,14 +150,13 @@ Connecting...
 <button
 class="mic"
 id="micButton"
-onclick="toggleMic()"
 >
 🎤 Mic On
 </button>
 
 <button
 class="leave"
-onclick="leaveRoom()"
+id="leaveButton"
 >
 🚪 Leave
 </button>
@@ -166,7 +169,11 @@ onclick="leaveRoom()"
 </div>
 
 
-<audio id="remoteAudio" autoplay></audio>
+<audio
+id="remoteAudio"
+autoplay
+playsinline
+></audio>
 
 
 <script type="module">
@@ -179,7 +186,8 @@ from
 
 
 import {
-getAuth
+getAuth,
+onAuthStateChanged
 }
 from
 "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
@@ -189,10 +197,10 @@ import {
 getDatabase,
 ref,
 set,
-get,
-push,
+remove,
 onValue,
-onDisconnect
+onDisconnect,
+onChildAdded
 }
 from
 "https://www.gstatic.com/firebasejs/12.5.0/firebase-database.js";
@@ -253,160 +261,628 @@ document.getElementById(
 roomName;
 
 
+const roomId =
+encodeURIComponent(roomName);
+
+
+const micButton =
+document.getElementById("micButton");
+
+const leaveButton =
+document.getElementById("leaveButton");
+
+const statusText =
+document.getElementById("status");
+
+const message =
+document.getElementById("message");
+
+const remoteAudio =
+document.getElementById("remoteAudio");
+
+const myName =
+document.getElementById("myName");
+
+const myStatus =
+document.getElementById("myStatus");
+
+const otherUser =
+document.getElementById("otherUser");
+
+
+let currentUser = null;
+
 let localStream = null;
-let micOn = false;
+
+let peerConnection = null;
+
+let currentPeerId = null;
+
+let connected = false;
 
 
-async function startMic(){
+const rtcConfig = {
+
+iceServers:[
+{
+urls:
+"stun:stun.l.google.com:19302"
+}
+]
+
+};
+
+
+function showMessage(text){
+
+message.textContent = text;
+
+}
+
+
+async function startMicrophone(){
 
 try{
 
 localStream =
 await navigator.mediaDevices.getUserMedia({
-audio:true
+
+audio:true,
+video:false
+
 });
 
-micOn = true;
 
-document.getElementById(
-"micButton"
-).textContent =
+localStream
+.getAudioTracks()
+.forEach(track => {
+
+track.enabled = true;
+
+});
+
+
+micButton.textContent =
+"🔇 Mic Off";
+
+myStatus.textContent =
 "🎤 Mic On";
 
-document.getElementById(
-"status"
-).textContent =
+
+statusText.textContent =
 "🟢 Microphone connected";
 
-document.getElementById(
-"message"
-).textContent =
-"আপনার Microphone চালু হয়েছে";
+
+showMessage(
+"Microphone চালু হয়েছে"
+);
+
+
+if(currentPeerId){
+
+await startConnection(
+currentPeerId
+);
+
+}
 
 }catch(error){
 
 console.error(error);
 
-document.getElementById(
-"message"
-).textContent =
-"Microphone permission দিন";
+showMessage(
+"Microphone permission দিন"
+);
 
 }
 
 }
 
 
-window.toggleMic = async function(){
+micButton.onclick =
+async () => {
 
 if(!localStream){
 
-await startMic();
+await startMicrophone();
 
 return;
 
 }
 
 
-const audioTracks =
-localStream.getAudioTracks();
+const track =
+localStream.getAudioTracks()[0];
 
-
-audioTracks.forEach(track => {
 
 track.enabled =
 !track.enabled;
 
-micOn =
-track.enabled;
 
-});
+if(track.enabled){
 
+micButton.textContent =
+"🔇 Mic Off";
 
-document.getElementById(
-"micButton"
-).textContent =
-micOn
-? "🎤 Mic On"
-: "🔇 Mic Off";
+myStatus.textContent =
+"🎤 Mic On";
 
-};
+}else{
 
+micButton.textContent =
+"🎤 Mic On";
 
-window.leaveRoom = function(){
-
-if(localStream){
-
-localStream.getTracks().forEach(
-track => track.stop()
-);
+myStatus.textContent =
+"🔇 Mic Off";
 
 }
 
-window.location.href =
-"rooms.html";
+};
+
+
+function createPeer(){
+
+const pc =
+new RTCPeerConnection(
+rtcConfig
+);
+
+
+if(localStream){
+
+localStream
+.getTracks()
+.forEach(track => {
+
+pc.addTrack(
+track,
+localStream
+);
+
+});
+
+}
+
+
+pc.ontrack =
+event => {
+
+remoteAudio.srcObject =
+event.streams[0];
+
+remoteAudio.play()
+.catch(() => {});
+
+statusText.textContent =
+"🟢 Live Voice Connected";
+
+showMessage(
+"অন্য user-এর সাথে Live Voice connected 🎙️"
+);
 
 };
 
 
-async function startRoom(){
+pc.onicecandidate =
+event => {
 
-if(!auth.currentUser){
-
-document.getElementById(
-"message"
-).textContent =
-"আগে Login করুন";
+if(!event.candidate){
 
 return;
 
 }
 
 
-document.getElementById(
-"myName"
-).textContent =
-auth.currentUser.displayName ||
-auth.currentUser.email;
+if(!currentPeerId){
+
+return;
+
+}
 
 
-const roomId =
-encodeURIComponent(roomName);
+const path =
+getConnectionPath(
+currentUser.uid,
+currentPeerId
+);
 
-const userId =
-auth.currentUser.uid;
 
-const userRef =
+const candidatePath =
+isCaller(currentUser.uid,currentPeerId)
+?
+"callerCandidates"
+:
+"calleeCandidates";
+
+
+const candidateRef =
 ref(
 db,
-"rooms/" +
-roomId +
-"/users/" +
-userId
+"voiceConnections/" +
+path +
+"/" +
+candidatePath +
+"/" +
+Date.now() +
+Math.random()
+);
+
+
+set(
+candidateRef,
+event.candidate.toJSON()
+);
+
+};
+
+
+pc.onconnectionstatechange =
+() => {
+
+if(
+pc.connectionState ===
+"connected"
+){
+
+connected = true;
+
+statusText.textContent =
+"🟢 Live Voice Connected";
+
+}
+
+if(
+pc.connectionState ===
+"disconnected" ||
+pc.connectionState ===
+"failed"
+){
+
+connected = false;
+
+statusText.textContent =
+"🔴 Voice disconnected";
+
+}
+
+};
+
+
+return pc;
+
+}
+
+
+function getConnectionPath(a,b){
+
+return a < b
+? a + "_" + b
+: b + "_" + a;
+
+}
+
+
+function isCaller(a,b){
+
+return a < b;
+
+}
+
+
+async function startConnection(peerId){
+
+if(!localStream){
+
+showMessage(
+"আগে 🎤 Mic On চাপুন"
+);
+
+return;
+
+}
+
+
+if(
+peerConnection &&
+currentPeerId === peerId
+){
+
+return;
+
+}
+
+
+currentPeerId =
+peerId;
+
+
+peerConnection =
+createPeer();
+
+
+const path =
+getConnectionPath(
+currentUser.uid,
+peerId
+);
+
+
+const base =
+"voiceConnections/" +
+path;
+
+
+const caller =
+isCaller(
+currentUser.uid,
+peerId
+);
+
+
+listenCandidates(
+base,
+caller
+);
+
+
+if(caller){
+
+const offer =
+await peerConnection.createOffer();
+
+await peerConnection.setLocalDescription(
+offer
 );
 
 
 await set(
-userRef,
+ref(
+db,
+base + "/offer"
+),
 {
-name:
-auth.currentUser.displayName ||
-auth.currentUser.email,
-
-joinedAt:
-Date.now()
+type:offer.type,
+sdp:offer.sdp
 }
 );
 
 
-onDisconnect(userRef).remove();
+showMessage(
+"Voice connection তৈরি হচ্ছে..."
+);
+
+}
+
+}
 
 
-document.getElementById(
-"status"
-).textContent =
-"🟢 Room connected";
+function listenCandidates(base,caller){
 
+const candidatePath =
+caller
+? "calleeCandidates"
+: "callerCandidates";
+
+
+const candidatesRef =
+ref(
+db,
+base +
+"/" +
+candidatePath
+);
+
+
+onChildAdded(
+candidatesRef,
+async snapshot => {
+
+if(!peerConnection){
+
+return;
+
+}
+
+
+try{
+
+await peerConnection.addIceCandidate(
+new RTCIceCandidate(
+snapshot.val()
+)
+);
+
+}catch(error){
+
+console.error(error);
+
+}
+
+});
+
+}
+
+
+function listenForOffer(peerId){
+
+const path =
+getConnectionPath(
+currentUser.uid,
+peerId
+);
+
+
+const base =
+"voiceConnections/" +
+path;
+
+
+const offerRef =
+ref(
+db,
+base + "/offer"
+);
+
+
+onValue(
+offerRef,
+async snapshot => {
+
+if(!snapshot.exists()){
+
+return;
+
+}
+
+
+if(
+isCaller(
+currentUser.uid,
+peerId
+)
+){
+
+return;
+
+}
+
+
+if(!localStream){
+
+return;
+
+}
+
+
+if(!peerConnection){
+
+currentPeerId =
+peerId;
+
+peerConnection =
+createPeer();
+
+listenCandidates(
+base,
+false
+);
+
+}
+
+
+const offer =
+snapshot.val();
+
+
+await peerConnection.setRemoteDescription(
+new RTCSessionDescription(
+offer
+)
+);
+
+
+const answer =
+await peerConnection.createAnswer();
+
+
+await peerConnection.setLocalDescription(
+answer
+);
+
+
+await set(
+ref(
+db,
+base + "/answer"
+),
+{
+type:answer.type,
+sdp:answer.sdp
+}
+);
+
+
+showMessage(
+"Voice connection তৈরি হচ্ছে..."
+);
+
+});
+
+}
+
+
+function listenForAnswer(peerId){
+
+if(
+!isCaller(
+currentUser.uid,
+peerId
+)
+){
+
+return;
+
+}
+
+
+const path =
+getConnectionPath(
+currentUser.uid,
+peerId
+);
+
+
+const answerRef =
+ref(
+db,
+"voiceConnections/" +
+path +
+"/answer"
+);
+
+
+onValue(
+answerRef,
+async snapshot => {
+
+if(!snapshot.exists()){
+
+return;
+
+}
+
+
+if(!peerConnection){
+
+return;
+
+}
+
+
+if(
+peerConnection
+.currentRemoteDescription
+){
+
+return;
+
+}
+
+
+await peerConnection.setRemoteDescription(
+
+new RTCSessionDescription(
+snapshot.val()
+)
+
+);
+
+});
+
+}
+
+
+function watchUsers(){
 
 const usersRef =
 ref(
@@ -422,34 +898,65 @@ usersRef,
 snapshot => {
 
 const users =
-snapshot.val();
+snapshot.val() || {};
 
-if(!users){
+
+const ids =
+Object.keys(users);
+
+
+const others =
+ids.filter(
+id =>
+id !== currentUser.uid
+);
+
+
+if(others.length === 0){
+
+currentPeerId = null;
+
+otherUser.textContent =
+"👤 Waiting for another person...";
+
+statusText.textContent =
+"🟢 Room ready";
 
 return;
 
 }
 
 
-const count =
-Object.keys(users).length;
+const peerId =
+others[0];
 
 
-if(count > 1){
+currentPeerId =
+peerId;
 
-document.getElementById(
-"otherUser"
-).textContent =
-"👥 " +
-(count - 1) +
-" জন অন্য user";
 
-}else{
+const peer =
+users[peerId];
 
-document.getElementById(
-"otherUser"
-).textContent =
-"👤 Waiting for another person...";
+
+otherUser.textContent =
+"👤 " +
+(
+peer.name ||
+"Voxa User"
+);
+
+
+listenForOffer(peerId);
+
+listenForAnswer(peerId);
+
+
+if(localStream){
+
+startConnection(
+peerId
+);
 
 }
 
@@ -458,17 +965,30 @@ document.getElementById(
 }
 
 
-document.addEventListener(
-"DOMContentLoaded",
-async () => {
+async function enterRoom(){
 
-await startRoom();
+const userRef =
+ref(
+db,
+"rooms/" +
+roomId +
+"/users/" +
+currentUser.uid
+);
 
+
+await set(
+userRef,
+{
+name:
+currentUser.displayName ||
+currentUser.email,
+
+joinedAt:
+Date.now()
 }
 );
 
-</script>
 
-</body>
-
-</html>
+onDisconnect(
+userRef
