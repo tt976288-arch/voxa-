@@ -6,7 +6,11 @@
 <title>Voxa Login</title>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
 
 body{
   font-family:Arial,sans-serif;
@@ -64,9 +68,12 @@ button{
   color:white;
   font-size:17px;
   font-weight:bold;
+  cursor:pointer;
 }
 
-button:disabled{opacity:.6}
+button:disabled{
+  opacity:.6;
+}
 
 .switch{
   text-align:center;
@@ -82,7 +89,9 @@ button:disabled{opacity:.6}
   font-size:14px;
 }
 
-.hidden{display:none}
+.hidden{
+  display:none;
+}
 </style>
 </head>
 
@@ -91,17 +100,35 @@ button:disabled{opacity:.6}
 <div class="box">
 
   <div class="logo">Voxa</div>
-  <div class="subtitle">Voice • Friends • Community</div>
+
+  <div class="subtitle">
+    Voice • Friends • Community
+  </div>
 
   <h2 id="title">Login</h2>
 
-  <input id="name" class="hidden" type="text" placeholder="Your Name">
+  <input
+    id="name"
+    class="hidden"
+    type="text"
+    placeholder="Your Name"
+  >
 
-  <input id="email" type="email" placeholder="Email">
+  <input
+    id="email"
+    type="email"
+    placeholder="Email"
+  >
 
-  <input id="password" type="password" placeholder="Password">
+  <input
+    id="password"
+    type="password"
+    placeholder="Password"
+  >
 
-  <button id="mainBtn">Login</button>
+  <button id="mainBtn">
+    Login
+  </button>
 
   <div id="switchText" class="switch">
     Create a new account
@@ -135,41 +162,76 @@ import {
 from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
 
 
-/* FIREBASE */
+/* FIREBASE CONFIG */
 
 const firebaseConfig = {
-  apiKey: "AIzaSyA5gUOduogmjx8b4-knQMnFQRWPUn-xecQ",
-  authDomain: "voxa-fc846.firebaseapp.com",
-  databaseURL: "https://voxa-fc846-default-rtdb.firebaseio.com",
-  projectId: "voxa-fc846",
-  storageBucket: "voxa-fc846.firebasestorage.app",
-  messagingSenderId: "337160477784",
-  appId: "1:337160477784:web:4098a526345d4d02d3e2d2",
-  measurementId: "G-F9MTE9F5V7"
+
+  apiKey:
+    "AIzaSyA5gUOduogmjx8b4-knQMnFQRWPUn-xecQ",
+
+  authDomain:
+    "voxa-fc846.firebaseapp.com",
+
+  databaseURL:
+    "https://voxa-fc846-default-rtdb.firebaseio.com",
+
+  projectId:
+    "voxa-fc846",
+
+  storageBucket:
+    "voxa-fc846.firebasestorage.app",
+
+  messagingSenderId:
+    "337160477784",
+
+  appId:
+    "1:337160477784:web:4098a526345d4d02d3e2d2",
+
+  measurementId:
+    "G-F9MTE9F5V7"
 };
 
 
+/* START FIREBASE */
+
 const app = initializeApp(firebaseConfig);
+
 const auth = getAuth(app);
+
 const db = getFirestore(app);
 
 
 /* KEEP LOGIN */
 
-await setPersistence(auth, browserLocalPersistence);
+await setPersistence(
+  auth,
+  browserLocalPersistence
+);
 
 
 /* ELEMENTS */
 
-const nameInput = document.getElementById("name");
-const emailInput = document.getElementById("email");
-const passwordInput = document.getElementById("password");
+const nameInput =
+  document.getElementById("name");
 
-const mainBtn = document.getElementById("mainBtn");
-const switchText = document.getElementById("switchText");
+const emailInput =
+  document.getElementById("email");
 
-const title = document.getElementById("title");
-const message = document.getElementById("message");
+const passwordInput =
+  document.getElementById("password");
+
+const mainBtn =
+  document.getElementById("mainBtn");
+
+const switchText =
+  document.getElementById("switchText");
+
+const title =
+  document.getElementById("title");
+
+const message =
+  document.getElementById("message");
+
 
 let registerMode = false;
 
@@ -185,17 +247,24 @@ switchText.onclick = function(){
   if(registerMode){
 
     title.textContent = "Create Account";
+
     nameInput.classList.remove("hidden");
+
     mainBtn.textContent = "Register";
-    switchText.textContent = "Already have an account? Login";
+
+    switchText.textContent =
+      "Already have an account? Login";
 
   }else{
 
     title.textContent = "Login";
-    nameInput.classList.add("hidden");
-    mainBtn.textContent = "Login";
-    switchText.textContent = "Create a new account";
 
+    nameInput.classList.add("hidden");
+
+    mainBtn.textContent = "Login";
+
+    switchText.textContent =
+      "Create a new account";
   }
 
 };
@@ -205,53 +274,79 @@ switchText.onclick = function(){
 
 mainBtn.onclick = async function(){
 
-  const name = nameInput.value.trim();
-  const email = emailInput.value.trim();
-  const password = passwordInput.value;
+  const name =
+    nameInput.value.trim();
+
+  const email =
+    emailInput.value.trim();
+
+  const password =
+    passwordInput.value;
+
 
   message.style.color = "#e53935";
+
   message.textContent = "";
+
+
+  /* CHECK EMAIL */
 
   if(!email){
 
-    message.textContent = "Email দিন।";
-    return;
+    message.textContent =
+      "Email দিন।";
 
+    return;
   }
+
+
+  /* CHECK PASSWORD */
 
   if(!password){
 
-    message.textContent = "Password দিন।";
-    return;
+    message.textContent =
+      "Password দিন।";
 
+    return;
   }
+
+
+  /* CHECK NAME */
 
   if(registerMode && !name){
 
-    message.textContent = "আপনার নাম দিন।";
-    return;
+    message.textContent =
+      "আপনার নাম দিন।";
 
+    return;
   }
+
+
+  /* PASSWORD LENGTH */
 
   if(registerMode && password.length < 6){
 
-    message.textContent = "Password কমপক্ষে ৬ অক্ষরের হতে হবে।";
-    return;
+    message.textContent =
+      "Password কমপক্ষে ৬ অক্ষরের হতে হবে।";
 
+    return;
   }
 
 
   mainBtn.disabled = true;
 
+
   mainBtn.textContent =
-    registerMode ? "Registering..." : "Logging in...";
+    registerMode
+    ? "Registering..."
+    : "Logging in...";
 
 
   try{
 
-    if(registerMode){
+    /* REGISTER */
 
-      /* CREATE ACCOUNT */
+    if(registerMode){
 
       const result =
         await createUserWithEmailAndPassword(
@@ -261,29 +356,41 @@ mainBtn.onclick = async function(){
         );
 
 
-      await updateProfile(result.user,{
-        displayName:name
-      });
-
-
-      await setDoc(
-        doc(db,"users",result.user.uid),
+      await updateProfile(
+        result.user,
         {
-          name:name,
-          email:email,
-          coins:0,
-          createdAt:new Date().toISOString()
+          displayName:name
         }
       );
 
 
-      message.style.color = "#00a884";
-      message.textContent = "Account তৈরি হয়েছে!";
+      await setDoc(
+        doc(
+          db,
+          "users",
+          result.user.uid
+        ),
+        {
+          name:name,
+          email:email,
+          coins:0,
+          createdAt:
+            new Date().toISOString()
+        }
+      );
+
+
+      message.style.color =
+        "#00a884";
+
+      message.textContent =
+        "Account তৈরি হয়েছে!";
 
 
       setTimeout(function(){
 
-        window.location.href = "index.html";
+        window.location.href =
+          "index.html";
 
       },800);
 
@@ -299,13 +406,17 @@ mainBtn.onclick = async function(){
       );
 
 
-      message.style.color = "#00a884";
-      message.textContent = "Login successful!";
+      message.style.color =
+        "#00a884";
+
+      message.textContent =
+        "Login successful!";
 
 
       setTimeout(function(){
 
-        window.location.href = "index.html";
+        window.location.href =
+          "index.html";
 
       },800);
 
@@ -316,33 +427,50 @@ mainBtn.onclick = async function(){
 
     console.log(error);
 
-    message.style.color = "#e53935";
+    message.style.color =
+      "#e53935";
 
-    if(error.code === "auth/invalid-credential"){
+
+    if(
+      error.code ===
+      "auth/invalid-credential"
+    ){
 
       message.textContent =
         "Email অথবা Password ভুল।";
 
-    }else if(error.code === "auth/email-already-in-use"){
+
+    }else if(
+      error.code ===
+      "auth/email-already-in-use"
+    ){
 
       message.textContent =
         "এই Email দিয়ে আগে থেকেই account আছে।";
 
-    }else if(error.code === "auth/invalid-email"){
+
+    }else if(
+      error.code ===
+      "auth/invalid-email"
+    ){
 
       message.textContent =
         "সঠিক Email দিন।";
 
-    }else if(error.code === "auth/weak-password"){
+
+    }else if(
+      error.code ===
+      "auth/weak-password"
+    ){
 
       message.textContent =
         "Password কমপক্ষে ৬ অক্ষরের হতে হবে।";
+
 
     }else{
 
       message.textContent =
         "সমস্যা: " + error.message;
-
     }
 
   }
@@ -350,8 +478,11 @@ mainBtn.onclick = async function(){
 
   mainBtn.disabled = false;
 
+
   mainBtn.textContent =
-    registerMode ? "Register" : "Login";
+    registerMode
+    ? "Register"
+    : "Login";
 
 };
 
