@@ -1,492 +1,397 @@
+
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Voxa Login</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Voxa - Login</title>
 
-<style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-body{
-  font-family:Arial,sans-serif;
-  min-height:100vh;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  background:linear-gradient(135deg,#00a884,#00796b);
-  padding:20px;
-}
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(145deg, #e5fff2, #f5f7ff);
+    }
 
-.box{
-  width:100%;
-  max-width:390px;
-  background:white;
-  border-radius:24px;
-  padding:30px 24px;
-  box-shadow:0 10px 35px rgba(0,0,0,.2);
-}
+    .container {
+      width: 100%;
+      max-width: 390px;
+      padding: 30px 24px;
+      background: white;
+      border-radius: 24px;
+      box-shadow: 0 12px 40px #12332218;
+    }
 
-.logo{
-  text-align:center;
-  font-size:42px;
-  font-weight:bold;
-  color:#00a884;
-}
+    .logo {
+      text-align: center;
+      font-size: 42px;
+      font-weight: bold;
+      color: #08a66a;
+      margin-bottom: 6px;
+    }
 
-.subtitle{
-  text-align:center;
-  color:#777;
-  margin:5px 0 25px;
-}
+    .subtitle {
+      text-align: center;
+      color: #777;
+      margin: 0 0 26px;
+    }
 
-h2{
-  text-align:center;
-  margin-bottom:20px;
-}
+    h2 {
+      margin: 0 0 22px;
+      text-align: center;
+      color: #222;
+    }
 
-input{
-  width:100%;
-  padding:14px;
-  margin-bottom:14px;
-  border:1px solid #ddd;
-  border-radius:12px;
-  font-size:16px;
-  outline:none;
-}
+    .field {
+      margin-bottom: 15px;
+    }
 
-button{
-  width:100%;
-  padding:14px;
-  border:0;
-  border-radius:12px;
-  background:#00a884;
-  color:white;
-  font-size:17px;
-  font-weight:bold;
-  cursor:pointer;
-}
+    label {
+      display: block;
+      margin-bottom: 7px;
+      font-size: 14px;
+      color: #333;
+    }
 
-button:disabled{
-  opacity:.6;
-}
+    input {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid #ddd;
+      border-radius: 12px;
+      font-size: 16px;
+      outline: none;
+    }
 
-.switch{
-  text-align:center;
-  margin-top:20px;
-  color:#00a884;
-  font-weight:bold;
-  cursor:pointer;
-}
+    input:focus {
+      border-color: #08a66a;
+    }
 
-#message{
-  text-align:center;
-  margin-top:15px;
-  font-size:14px;
-}
+    button {
+      width: 100%;
+      padding: 14px;
+      border: none;
+      border-radius: 12px;
+      background: #08a66a;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
 
-.hidden{
-  display:none;
-}
-</style>
+    button:disabled {
+      opacity: 0.65;
+      cursor: wait;
+    }
+
+    .switch {
+      text-align: center;
+      margin-top: 20px;
+      color: #666;
+      font-size: 14px;
+    }
+
+    .switch a {
+      color: #08a66a;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    #message {
+      display: none;
+      margin-top: 16px;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 14px;
+      line-height: 1.5;
+      overflow-wrap: anywhere;
+    }
+
+    #message.error {
+      display: block;
+      color: #b42318;
+      background: #fff0ee;
+    }
+
+    #message.success {
+      display: block;
+      color: #087443;
+      background: #e9fff3;
+    }
+  </style>
 </head>
 
 <body>
-
-<div class="box">
-
-  <div class="logo">Voxa</div>
-
-  <div class="subtitle">
-    Voice • Friends • Community
-  </div>
-
-  <h2 id="title">Login</h2>
-
-  <input
-    id="name"
-    class="hidden"
-    type="text"
-    placeholder="Your Name"
-  >
-
-  <input
-    id="email"
-    type="email"
-    placeholder="Email"
-  >
-
-  <input
-    id="password"
-    type="password"
-    placeholder="Password"
-  >
-
-  <button id="mainBtn">
-    Login
-  </button>
-
-  <div id="switchText" class="switch">
-    Create a new account
-  </div>
-
-  <div id="message"></div>
-
-</div>
-
-
-<script type="module">
-
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
-
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  updateProfile,
-  setPersistence,
-  browserLocalPersistence
-}
-from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
-
-import {
-  getFirestore,
-  doc,
-  setDoc
-}
-from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
-
-
-/* FIREBASE CONFIG */
-
-const firebaseConfig = {
-
-  apiKey:
-    "AIzaSyA5gUOduogmjx8b4-knQMnFQRWPUn-xecQ",
-
-  authDomain:
-    "voxa-fc846.firebaseapp.com",
-
-  databaseURL:
-    "https://voxa-fc846-default-rtdb.firebaseio.com",
-
-  projectId:
-    "voxa-fc846",
-
-  storageBucket:
-    "voxa-fc846.firebasestorage.app",
-
-  messagingSenderId:
-    "337160477784",
-
-  appId:
-    "1:337160477784:web:4098a526345d4d02d3e2d2",
-
-  measurementId:
-    "G-F9MTE9F5V7"
-};
-
-
-/* START FIREBASE */
-
-const app = initializeApp(firebaseConfig);
-
-const auth = getAuth(app);
-
-const db = getFirestore(app);
-
-
-/* KEEP LOGIN */
-
-await setPersistence(
-  auth,
-  browserLocalPersistence
-);
-
-
-/* ELEMENTS */
-
-const nameInput =
-  document.getElementById("name");
-
-const emailInput =
-  document.getElementById("email");
-
-const passwordInput =
-  document.getElementById("password");
-
-const mainBtn =
-  document.getElementById("mainBtn");
-
-const switchText =
-  document.getElementById("switchText");
-
-const title =
-  document.getElementById("title");
-
-const message =
-  document.getElementById("message");
-
-
-let registerMode = false;
-
-
-/* LOGIN / REGISTER SWITCH */
-
-switchText.onclick = function(){
-
-  registerMode = !registerMode;
-
-  message.textContent = "";
-
-  if(registerMode){
-
-    title.textContent = "Create Account";
-
-    nameInput.classList.remove("hidden");
-
-    mainBtn.textContent = "Register";
-
-    switchText.textContent =
-      "Already have an account? Login";
-
-  }else{
-
-    title.textContent = "Login";
-
-    nameInput.classList.add("hidden");
-
-    mainBtn.textContent = "Login";
-
-    switchText.textContent =
-      "Create a new account";
-  }
-
-};
-
-
-/* MAIN BUTTON */
-
-mainBtn.onclick = async function(){
-
-  const name =
-    nameInput.value.trim();
-
-  const email =
-    emailInput.value.trim();
-
-  const password =
-    passwordInput.value;
-
-
-  message.style.color = "#e53935";
-
-  message.textContent = "";
-
-
-  /* CHECK EMAIL */
-
-  if(!email){
-
-    message.textContent =
-      "Email দিন।";
-
-    return;
-  }
-
-
-  /* CHECK PASSWORD */
-
-  if(!password){
-
-    message.textContent =
-      "Password দিন।";
-
-    return;
-  }
-
-
-  /* CHECK NAME */
-
-  if(registerMode && !name){
-
-    message.textContent =
-      "আপনার নাম দিন।";
-
-    return;
-  }
-
-
-  /* PASSWORD LENGTH */
-
-  if(registerMode && password.length < 6){
-
-    message.textContent =
-      "Password কমপক্ষে ৬ অক্ষরের হতে হবে।";
-
-    return;
-  }
-
-
-  mainBtn.disabled = true;
-
-
-  mainBtn.textContent =
-    registerMode
-    ? "Registering..."
-    : "Logging in...";
-
-
-  try{
-
-    /* REGISTER */
-
-    if(registerMode){
-
-      const result =
-        await createUserWithEmailAndPassword(
-          auth,
-          email,
-          password
-        );
-
-
-      await updateProfile(
-        result.user,
-        {
-          displayName:name
-        }
-      );
-
-
-      await setDoc(
-        doc(
-          db,
-          "users",
-          result.user.uid
-        ),
-        {
-          name:name,
-          email:email,
-          coins:0,
-          createdAt:
-            new Date().toISOString()
-        }
-      );
-
-
-      message.style.color =
-        "#00a884";
-
-      message.textContent =
-        "Account তৈরি হয়েছে!";
-
-
-      setTimeout(function(){
-
-        window.location.href =
-          "index.html";
-
-      },800);
-
-
-    }else{
-
-      /* LOGIN */
-
-      await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
-
-
-      message.style.color =
-        "#00a884";
-
-      message.textContent =
-        "Login successful!";
-
-
-      setTimeout(function(){
-
-        window.location.href =
-          "index.html";
-
-      },800);
-
+  <main class="container">
+    <div class="logo">Voxa</div>
+    <p class="subtitle">তোমার ভয়েস কমিউনিটিতে স্বাগতম</p>
+
+    <h2 id="formTitle">লগইন করো</h2>
+
+    <form id="authForm">
+      <div class="field" id="nameField" hidden>
+        <label for="name">তোমার নাম</label>
+        <input
+          id="name"
+          type="text"
+          placeholder="নাম লিখো"
+          autocomplete="name"
+        >
+      </div>
+
+      <div class="field">
+        <label for="email">ইমেইল</label>
+        <input
+          id="email"
+          type="email"
+          placeholder="name@example.com"
+          autocomplete="email"
+          required
+        >
+      </div>
+
+      <div class="field">
+        <label for="password">পাসওয়ার্ড</label>
+        <input
+          id="password"
+          type="password"
+          placeholder="কমপক্ষে ৬ অক্ষর"
+          minlength="6"
+          autocomplete="current-password"
+          required
+        >
+      </div>
+
+      <button id="submitBtn" type="submit">লগইন</button>
+    </form>
+
+    <div id="message" role="status" aria-live="polite"></div>
+
+    <div class="switch">
+      <span id="switchLabel">নতুন এখানে?</span>
+      <a href="#" id="switchLink">অ্যাকাউন্ট খোলো</a>
+    </div>
+  </main>
+
+  <script type="module">
+    import { initializeApp }
+      from "https://www.gstatic.com/firebasejs/12.5.0/firebase-app.js";
+
+    import {
+      getAuth,
+      createUserWithEmailAndPassword,
+      signInWithEmailAndPassword,
+      updateProfile,
+      setPersistence,
+      browserLocalPersistence
+    } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-auth.js";
+
+    import {
+      getFirestore,
+      doc,
+      setDoc,
+      getDoc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/12.5.0/firebase-firestore.js";
+
+    // তোমার নতুন Firebase Config
+    const firebaseConfig = {
+      apiKey: "AIzaSyA5gUOduogMjx8b4-knQMnFQRWPUn-xecQ",
+      authDomain: "voxa-fc846.firebaseapp.com",
+      databaseURL: "https://voxa-fc846-default-rtdb.firebaseio.com",
+      projectId: "voxa-fc846",
+      storageBucket: "voxa-fc846.firebasestorage.app",
+      messagingSenderId: "337160477784",
+      appId: "1:337160477784:web:4098a526345da4d02d3e2d",
+      measurementId: "G-F9MTE9F5V7"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const form = document.getElementById("authForm");
+    const nameField = document.getElementById("nameField");
+    const nameInput = document.getElementById("name");
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+    const submitBtn = document.getElementById("submitBtn");
+    const formTitle = document.getElementById("formTitle");
+    const switchLabel = document.getElementById("switchLabel");
+    const switchLink = document.getElementById("switchLink");
+    const message = document.getElementById("message");
+
+    let isRegister = false;
+    let busy = false;
+
+    function showMessage(text, type = "error") {
+      message.textContent = text;
+      message.className = type;
     }
 
+    function setMode(register) {
+      isRegister = register;
+      nameField.hidden = !register;
+      nameInput.required = register;
+      passwordInput.autocomplete = register
+        ? "new-password"
+        : "current-password";
 
-  }catch(error){
+      formTitle.textContent = register
+        ? "নতুন অ্যাকাউন্ট খোলো"
+        : "লগইন করো";
 
-    console.log(error);
+      submitBtn.textContent = register ? "অ্যাকাউন্ট তৈরি করো" : "লগইন";
 
-    message.style.color =
-      "#e53935";
+      switchLabel.textContent = register
+        ? "আগে থেকেই অ্যাকাউন্ট আছে?"
+        : "নতুন এখানে?";
 
-
-    if(
-      error.code ===
-      "auth/invalid-credential"
-    ){
-
-      message.textContent =
-        "Email অথবা Password ভুল।";
-
-
-    }else if(
-      error.code ===
-      "auth/email-already-in-use"
-    ){
-
-      message.textContent =
-        "এই Email দিয়ে আগে থেকেই account আছে।";
-
-
-    }else if(
-      error.code ===
-      "auth/invalid-email"
-    ){
-
-      message.textContent =
-        "সঠিক Email দিন।";
-
-
-    }else if(
-      error.code ===
-      "auth/weak-password"
-    ){
-
-      message.textContent =
-        "Password কমপক্ষে ৬ অক্ষরের হতে হবে।";
-
-
-    }else{
-
-      message.textContent =
-        "সমস্যা: " + error.message;
+      switchLink.textContent = register ? "লগইন করো" : "অ্যাকাউন্ট খোলো";
+      message.className = "";
+      message.textContent = "";
     }
 
-  }
+    switchLink.addEventListener("click", (event) => {
+      event.preventDefault();
+      if (!busy) setMode(!isRegister);
+    });
 
+    function friendlyError(error) {
+      switch (error.code) {
+        case "auth/api-key-not-valid":
+        case "auth/invalid-api-key":
+          return "Firebase API Key গ্রহণ করছে না। Config ও API Key সেটিংস পরীক্ষা করতে হবে.";
 
-  mainBtn.disabled = false;
+        case "auth/invalid-email":
+          return "সঠিক ইমেইল ঠিকানা লিখো।";
 
+        case "auth/email-already-in-use":
+          return "এই ইমেইল দিয়ে আগে থেকেই অ্যাকাউন্ট খোলা আছে। লগইন করো।";
 
-  mainBtn.textContent =
-    registerMode
-    ? "Register"
-    : "Login";
+        case "auth/weak-password":
+          return "আরও শক্তিশালী পাসওয়ার্ড দাও; কমপক্ষে ৬ অক্ষর লাগবে।";
 
-};
+        case "auth/invalid-credential":
+        case "auth/wrong-password":
+        case "auth/user-not-found":
+          return "ইমেইল বা পাসওয়ার্ড সঠিক নয়।";
 
-</script>
+        case "auth/too-many-requests":
+          return "অনেকবার চেষ্টা হয়েছে। কিছুক্ষণ পরে আবার চেষ্টা করো।";
 
+        case "auth/network-request-failed":
+          return "ইন্টারনেট সংযোগ পরীক্ষা করে আবার চেষ্টা করো।";
+
+        case "auth/operation-not-allowed":
+          return "Firebase Console-এ Email/Password Sign-in চালু করতে হবে।";
+
+        case "permission-denied":
+        case "firestore/permission-denied":
+          return "Firestore Rules অনুমতি দিচ্ছে না। Firebase Rules পরীক্ষা করতে হবে।";
+
+        default:
+          return "সমস্যা: " + (error.message || "আবার চেষ্টা করো।");
+      }
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (busy) return;
+
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+      const name = nameInput.value.trim();
+
+      if (isRegister && !name) {
+        showMessage("তোমার নাম লিখো।");
+        return;
+      }
+
+      if (isRegister && password.length < 6) {
+        showMessage("পাসওয়ার্ড কমপক্ষে ৬ অক্ষরের হতে হবে।");
+        return;
+      }
+
+      busy = true;
+      submitBtn.disabled = true;
+      submitBtn.textContent = "অপেক্ষা করো...";
+      message.className = "";
+      message.textContent = "";
+
+      try {
+        await setPersistence(auth, browserLocalPersistence);
+
+        if (isRegister) {
+          const result = await createUserWithEmailAndPassword(
+            auth,
+            email,
+            password
+          );
+
+          await updateProfile(result.user, {
+            displayName: name
+          });
+
+          try {
+            await setDoc(doc(db, "users", result.user.uid), {
+              name,
+              email,
+              coins: 0,
+              createdAt: serverTimestamp()
+            });
+          } catch (profileError) {
+            console.error("User profile save error:", profileError);
+          }
+
+        } else {
+          const result = await signInWithEmailAndPassword(
+            auth,
+            email,
+            password
+          );
+
+          // পুরোনো অ্যাকাউন্টে প্রোফাইল না থাকলে তৈরি করার চেষ্টা
+          try {
+            const userRef = doc(db, "users", result.user.uid);
+            const userSnap = await getDoc(userRef);
+
+            if (!userSnap.exists()) {
+              await setDoc(userRef, {
+                name: result.user.displayName || email.split("@")[0],
+                email,
+                coins: 0,
+                createdAt: serverTimestamp()
+              });
+            }
+          } catch (profileError) {
+            console.error("User profile check error:", profileError);
+          }
+        }
+
+        showMessage("সফল হয়েছে! Voxa খুলছে...", "success");
+
+        window.location.replace("index.html");
+
+      } catch (error) {
+        console.error("Voxa authentication error:", error);
+        showMessage(friendlyError(error));
+      } finally {
+        busy = false;
+        submitBtn.disabled = false;
+        submitBtn.textContent = isRegister
+          ? "অ্যাকাউন্ট তৈরি করো"
+          : "লগইন";
+      }
+    });
+  </script>
 </body>
 </html>
